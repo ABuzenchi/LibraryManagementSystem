@@ -1,0 +1,24 @@
+# Compiled files
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code
+.vscode/
+
+# OS generated files (Mac)
+.DS_Store
+*.swp
+
+# Nu urmări fișiere de configurare locale
+appsettings.Development.json
+*.local
+
+# Nu urmări pachetele NuGet restore
+*.nupkg
+packages/
