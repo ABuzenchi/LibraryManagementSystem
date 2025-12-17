@@ -6,5 +6,6 @@ namespace Library.Service.Interfaces
     public interface IBookDomainService
     {
         void ValidateNoAncestorDomainConflict(IEnumerable<BookDomain> domains);
+        void ValidateMaxDomainsPerBook(IEnumerable<BookDomain>domains, int maxAllowedDomains);
     }
 }

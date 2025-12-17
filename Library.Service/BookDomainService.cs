@@ -33,5 +33,26 @@ namespace Library.Service
                 }
             }
         }
+
+        public void ValidateMaxDomainsPerBook( IEnumerable<BookDomain> domains, int maxAllowedDomains)
+        {
+            if(domains==null)
+            {
+                throw new ArgumentNullException(nameof(domains));
+
+            }
+
+            if(maxAllowedDomains<=0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(maxAllowedDomains),"Maximum allowed domains must be greater than zero");
+            }
+
+            var count=domains.Count();
+
+            if(count>maxAllowedDomains)
+            {
+                throw new InvalidOperationException($"A book cannot be assigned to more than {maxAllowedDomains} domains.");
+            }
+        }
     }
 }
