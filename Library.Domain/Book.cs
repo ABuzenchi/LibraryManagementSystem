@@ -10,5 +10,11 @@ namespace Library.Domain
         /// </summary>
         public int Id{get;set;}
         
+        /// <summary>
+        /// The title of the book
+        /// </summary>
+        public required string Title{get;set;}
+
+        public List<BookDomain>Domains{get;set;}=new();
     }
 }

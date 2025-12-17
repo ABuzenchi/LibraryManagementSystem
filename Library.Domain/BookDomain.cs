@@ -4,7 +4,7 @@ namespace Library.Domain
     /// Represents a domain of books
     /// Domains can have subdomains
     /// </summary>
-    public class Domain
+    public class BookDomain
     {
         /// <summary>
         /// The unique identifier of the domain.
@@ -17,15 +17,19 @@ namespace Library.Domain
         public required string Name{get;set;}
 
         /// <summary>
-        /// Parent domain if this is a subdomain
-        /// null if this is a main domain
+        /// Null if this is a root domain
         /// </summary>
-        public Domain? Parent{get;set;}
+        public int? ParentId{get;set;}
+
+        /// <summary>
+        /// Parent domain
+        /// </summary>
+        public BookDomain? Parent{get;set;}
 
         /// <summary>
         /// List of subdomains under this domain
         /// </summary>
-        public List<Domain>Subdomains{get;set;}=new();
+        public List<BookDomain>Subdomains{get;set;}=new();
 
         /// <summary>
         /// list of the books associated with this domain.
