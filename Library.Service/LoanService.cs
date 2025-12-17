@@ -28,5 +28,38 @@ namespace Library.Service
                 throw new InvalidOperationException($"A loan cannot contain more than {maxItemsPerLoan} items.");
             }
         }
+
+         public void ValidateDailyLoanLimit(Reader reader, DateTime loanDate, IEnumerable<Loan>existingLoansForReader,IEnumerable<BookItem> newLoanItems, int maxItemsPerDay)
+        {
+            if(reader==null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            if(existingLoansForReader==null)
+            {
+                throw new ArgumentNullException(nameof(existingLoansForReader));
+            }
+
+            if(newLoanItems==null)
+            {
+                throw new ArgumentNullException(nameof(newLoanItems));
+            }
+
+            if(maxItemsPerDay<=0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(maxItemsPerDay));
+            }
+
+            var date=loanDate.Date;
+
+            var alreadyBorrowedToday=existingLoansForReader.Where(l=>l.LoanDate.Date==date).Sum(l=>l.LoanItems.Count);
+            var totalForToday=alreadyBorrowedToday+newLoanItems.Count();
+            
+            if(totalForToday>maxItemsPerDay)
+            {
+                throw new InvalidOperationException($"Daily loan limit exceeded. Maximum allowed is {maxItemsPerDay} items per day.");
+            }
+        }
     }
 }

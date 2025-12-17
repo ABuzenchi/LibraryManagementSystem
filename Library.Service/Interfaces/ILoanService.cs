@@ -14,5 +14,7 @@ namespace Library.Service.Interfaces
         /// <param name="items">Loan items</param>
         /// <param name="maxItemsperLoan">Maximum allowed items</param>
         void ValidateLoanItemLimit(IEnumerable<BookItem>items, int maxItemsPerLoan);
+
+        void ValidateDailyLoanLimit(Reader reader, DateTime loanDate, IEnumerable<Loan>existingLoansForReader,IEnumerable<BookItem> newLoanItems, int maxItemsPerDay);
     }
 }

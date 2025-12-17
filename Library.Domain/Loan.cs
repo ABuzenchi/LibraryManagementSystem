@@ -1,3 +1,5 @@
+using System.Dynamic;
+
 namespace Library.Domain
 {
     /// <summary>
@@ -24,5 +26,10 @@ namespace Library.Domain
         /// The due date for returning the loaned items
         /// </summary>
         public DateTime ReturnDueDate{get;set;}
+
+        /// <summary>
+        /// Items included in this loan
+        /// </summary>
+        public List<LoanItems>LoanItems{get;set;}=new();
     }
 }
