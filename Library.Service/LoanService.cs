@@ -61,5 +61,33 @@ namespace Library.Service
                 throw new InvalidOperationException($"Daily loan limit exceeded. Maximum allowed is {maxItemsPerDay} items per day.");
             }
         }
+
+        public void ValidateDistinctDomainsForLoan(IEnumerable<BookItem>items)
+        {
+            if (items == null)
+    {
+        throw new ArgumentNullException(nameof(items));
+    }
+
+    var itemList = items.ToList();
+
+    if (itemList.Count < 3)
+    {
+        return;
+    }
+
+    var distinctDomains =
+        itemList
+            .SelectMany(i => i.Edition.Book.Domains)
+            .Select(d => d.Id)
+            .Distinct()
+            .Count();
+
+    if (distinctDomains < 2)
+    {
+        throw new InvalidOperationException(
+            "When borrowing three or more items, at least two distinct domains are required.");
+    }
+        }
     }
 }

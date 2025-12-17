@@ -16,5 +16,6 @@ namespace Library.Service.Interfaces
         void ValidateLoanItemLimit(IEnumerable<BookItem>items, int maxItemsPerLoan);
 
         void ValidateDailyLoanLimit(Reader reader, DateTime loanDate, IEnumerable<Loan>existingLoansForReader,IEnumerable<BookItem> newLoanItems, int maxItemsPerDay);
+        void ValidateDistinctDomainsForLoan(IEnumerable<BookItem>items);
     }
 }
