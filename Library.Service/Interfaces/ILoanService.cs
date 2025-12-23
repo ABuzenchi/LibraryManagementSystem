@@ -19,5 +19,6 @@ namespace Library.Service.Interfaces
         void ValidateDistinctDomainsForLoan(IEnumerable<BookItem> items);
         void ValidateBookAvailabilityForLoan(Book book, IEnumerable<BookItem> allItemsForBooks, IEnumerable<BookItem> currentlyLoanedItems);
         void ValidateBookReborrowDelta(Reader reader, Book book, DateTime loanDate, IEnumerable<Loan> previousLoans, int deltaInDays);
+        void ValidateLoanExtensionLimit(Loan loan, IEnumerable<LoanExtension>existingExtensions, int maxExtensions);
     }
 }

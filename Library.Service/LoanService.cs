@@ -175,5 +175,29 @@ namespace Library.Service
             }
         }
 
+        public void ValidateLoanExtensionLimit(Loan loan, IEnumerable<LoanExtension> existingExtensions, int maxExtensions)
+        {
+            if (loan == null)
+            {
+                throw new ArgumentNullException(nameof(loan));
+            }
+
+            if (existingExtensions == null)
+            {
+                throw new ArgumentNullException(nameof(existingExtensions));
+            }
+
+            if (maxExtensions <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(maxExtensions));
+            }
+
+            var extensionCount = existingExtensions.Count(e => e.Loan.Id == loan.Id);
+
+            if (extensionCount >= maxExtensions)
+            {
+                throw new InvalidOperationException($"Loan cannot be extended more than {maxExtensions} times.");
+            }
+        }
     }
 }
