@@ -3,6 +3,7 @@ namespace Library.Service
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Authentication.ExtendedProtection;
     using Library.Domain;
     using Library.Service.Interfaces;
 
@@ -197,6 +198,49 @@ namespace Library.Service
             if (extensionCount >= maxExtensions)
             {
                 throw new InvalidOperationException($"Loan cannot be extended more than {maxExtensions} times.");
+            }
+        }
+
+        public void ValidateMaxItemsInPeriod(Reader reader, DateTime loanDate, IEnumerable<Loan>existingLoans, IEnumerable<BookItem>newLoanItems, int periodInDays, int maxItemsInPeriod)
+        {
+            if(reader==null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            if(existingLoans==null)
+            {
+                throw new ArgumentNullException(nameof(existingLoans));
+            }
+
+            if(newLoanItems==null)
+            {
+                throw new ArgumentNullException(nameof(newLoanItems));
+            }
+
+            if(periodInDays<=0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(periodInDays));
+            }
+            
+            if(maxItemsInPeriod<=0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(maxItemsInPeriod));
+            }
+
+            var fromDate=loanDate.Date.AddDays(-periodInDays);
+
+            var alreadyBorrowedToday=
+            existingLoans
+            .Where(l=>l.Reader.Id==reader.Id)
+            .Where(l=>l.LoanDate.Date>=fromDate && l.LoanDate.Date<=loanDate.Date)
+            .Sum(l=>l.LoanItems.Count);
+
+            var totalAfterThisLoan=alreadyBorrowedToday+newLoanItems.Count();
+
+            if(totalAfterThisLoan > maxItemsInPeriod)
+            {
+                throw new InvalidOperationException(  $"Maximum of {maxItemsInPeriod} items allowed in a period of {periodInDays} days.");
             }
         }
     }

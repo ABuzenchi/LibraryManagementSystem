@@ -20,5 +20,6 @@ namespace Library.Service.Interfaces
         void ValidateBookAvailabilityForLoan(Book book, IEnumerable<BookItem> allItemsForBooks, IEnumerable<BookItem> currentlyLoanedItems);
         void ValidateBookReborrowDelta(Reader reader, Book book, DateTime loanDate, IEnumerable<Loan> previousLoans, int deltaInDays);
         void ValidateLoanExtensionLimit(Loan loan, IEnumerable<LoanExtension>existingExtensions, int maxExtensions);
+        void ValidateMaxItemsInPeriod(Reader reader, DateTime loanDate, IEnumerable<Loan>existingLoans, IEnumerable<BookItem>newLoanItems, int periodInDays, int maxItemsInPeriod);
     }
 }
