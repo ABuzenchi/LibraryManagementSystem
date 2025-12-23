@@ -122,12 +122,58 @@ namespace Library.Service
                 throw new InvalidOperationException("All copies of this book are restricted to the reading room");
             }
 
-            var availableItems=loanableItems.Except(currentlyLoanedItems).Count();
-            var minimumRequired=(int)Math.Ceiling(totalItems*0.10);
-            if(availableItems<minimumRequired)
+            var availableItems = loanableItems.Except(currentlyLoanedItems).Count();
+            var minimumRequired = (int)Math.Ceiling(totalItems * 0.10);
+            if (availableItems < minimumRequired)
             {
                 throw new InvalidOperationException("Not enough available copies to allow loaning this book");
             }
         }
+
+        public void ValidateBookReborrowDelta(Reader reader, Book book, DateTime loanDate, IEnumerable<Loan> previousLoans, int deltaInDays)
+        {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            if (book == null)
+            {
+                throw new ArgumentNullException(nameof(book));
+            }
+
+            if (previousLoans == null)
+            {
+                throw new ArgumentNullException(nameof(previousLoans));
+            }
+
+            if (deltaInDays <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(deltaInDays));
+            }
+
+            var lastLoanDate =
+    previousLoans
+        .Where(l => l.Reader.Id == reader.Id)
+        .Where(l => l.LoanItems.Any(li =>
+            li.BookItem.Edition.Book.Id == book.Id))
+        .Select(l => l.LoanDate)
+        .OrderByDescending(d => d)
+        .FirstOrDefault();
+
+
+            if (lastLoanDate == default)
+            {
+                return;
+            }
+
+            var daysSinceLastLoan = (loanDate.Date - lastLoanDate.Date).TotalDays;
+
+            if (daysSinceLastLoan < deltaInDays)
+            {
+                throw new InvalidOperationException($"The book cannot be borrowed again within {deltaInDays} days.");
+            }
+        }
+
     }
 }
