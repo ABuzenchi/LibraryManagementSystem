@@ -52,6 +52,11 @@ namespace Library.Service
                 throw new ArgumentOutOfRangeException(nameof(maxItemsPerDay));
             }
 
+            if (reader.IsStaff)
+            {
+                return;
+            }
+
             var date = loanDate.Date;
 
             var alreadyBorrowedToday = existingLoansForReader.Where(l => l.LoanDate.Date == date).Sum(l => l.LoanItems.Count);
@@ -153,14 +158,16 @@ namespace Library.Service
                 throw new ArgumentOutOfRangeException(nameof(deltaInDays));
             }
 
+            var effectiveDelta = reader.IsStaff ? Math.Max(1, deltaInDays / 2) : deltaInDays;
+
             var lastLoanDate =
-    previousLoans
-        .Where(l => l.Reader.Id == reader.Id)
-        .Where(l => l.LoanItems.Any(li =>
-            li.BookItem.Edition.Book.Id == book.Id))
-        .Select(l => l.LoanDate)
-        .OrderByDescending(d => d)
-        .FirstOrDefault();
+              previousLoans
+              .Where(l => l.Reader.Id == reader.Id)
+              .Where(l => l.LoanItems.Any(li =>
+              li.BookItem.Edition.Book.Id == book.Id))
+              .Select(l => l.LoanDate)
+              .OrderByDescending(d => d)
+              .FirstOrDefault();
 
 
             if (lastLoanDate == default)
@@ -170,7 +177,7 @@ namespace Library.Service
 
             var daysSinceLastLoan = (loanDate.Date - lastLoanDate.Date).TotalDays;
 
-            if (daysSinceLastLoan < deltaInDays)
+            if (daysSinceLastLoan < effectiveDelta)
             {
                 throw new InvalidOperationException($"The book cannot be borrowed again within {deltaInDays} days.");
             }
@@ -193,54 +200,57 @@ namespace Library.Service
                 throw new ArgumentOutOfRangeException(nameof(maxExtensions));
             }
 
+            var effectiveLimit = loan.Reader.IsStaff ? maxExtensions * 2 : maxExtensions;
             var extensionCount = existingExtensions.Count(e => e.Loan.Id == loan.Id);
 
-            if (extensionCount >= maxExtensions)
+            if (extensionCount >= effectiveLimit)
             {
                 throw new InvalidOperationException($"Loan cannot be extended more than {maxExtensions} times.");
             }
         }
 
-        public void ValidateMaxItemsInPeriod(Reader reader, DateTime loanDate, IEnumerable<Loan>existingLoans, IEnumerable<BookItem>newLoanItems, int periodInDays, int maxItemsInPeriod)
+        public void ValidateMaxItemsInPeriod(Reader reader, DateTime loanDate, IEnumerable<Loan> existingLoans, IEnumerable<BookItem> newLoanItems, int periodInDays, int maxItemsInPeriod)
         {
-            if(reader==null)
+            if (reader == null)
             {
                 throw new ArgumentNullException(nameof(reader));
             }
 
-            if(existingLoans==null)
+            if (existingLoans == null)
             {
                 throw new ArgumentNullException(nameof(existingLoans));
             }
 
-            if(newLoanItems==null)
+            if (newLoanItems == null)
             {
                 throw new ArgumentNullException(nameof(newLoanItems));
             }
 
-            if(periodInDays<=0)
+            if (periodInDays <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(periodInDays));
             }
-            
-            if(maxItemsInPeriod<=0)
+
+            if (maxItemsInPeriod <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(maxItemsInPeriod));
             }
 
-            var fromDate=loanDate.Date.AddDays(-periodInDays);
+            var effectivePeriod=reader.IsStaff?Math.Max(1,periodInDays/2):periodInDays;
+            var effectiveMax=reader.IsStaff?maxItemsInPeriod*2:maxItemsInPeriod;
+            var fromDate = loanDate.Date.AddDays(-effectivePeriod);
 
-            var alreadyBorrowedToday=
+            var alreadyBorrowedToday =
             existingLoans
-            .Where(l=>l.Reader.Id==reader.Id)
-            .Where(l=>l.LoanDate.Date>=fromDate && l.LoanDate.Date<=loanDate.Date)
-            .Sum(l=>l.LoanItems.Count);
+            .Where(l => l.Reader.Id == reader.Id)
+            .Where(l => l.LoanDate.Date >= fromDate && l.LoanDate.Date <= loanDate.Date)
+            .Sum(l => l.LoanItems.Count);
 
-            var totalAfterThisLoan=alreadyBorrowedToday+newLoanItems.Count();
+            var totalAfterThisLoan = alreadyBorrowedToday + newLoanItems.Count();
 
-            if(totalAfterThisLoan > maxItemsInPeriod)
+            if (totalAfterThisLoan > effectiveMax)
             {
-                throw new InvalidOperationException(  $"Maximum of {maxItemsInPeriod} items allowed in a period of {periodInDays} days.");
+                throw new InvalidOperationException($"Maximum of {effectiveMax} items allowed in a period of {effectivePeriod} days.");
             }
         }
     }
