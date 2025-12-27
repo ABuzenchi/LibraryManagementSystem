@@ -59,7 +59,13 @@ namespace Library.Service
 
             var date = loanDate.Date;
 
-            var alreadyBorrowedToday = existingLoansForReader.Where(l => l.LoanDate.Date == date).Sum(l => l.LoanItems.Count);
+            var alreadyBorrowedToday =
+
+             existingLoansForReader
+             .Where(l => l.Reader.Id == reader.Id)
+             .Where(l => l.LoanDate.Date == date)
+             .Sum(l => l.LoanItems.Count);
+
             var totalForToday = alreadyBorrowedToday + newLoanItems.Count();
 
             if (totalForToday > maxItemsPerDay)
@@ -236,8 +242,8 @@ namespace Library.Service
                 throw new ArgumentOutOfRangeException(nameof(maxItemsInPeriod));
             }
 
-            var effectivePeriod=reader.IsStaff?Math.Max(1,periodInDays/2):periodInDays;
-            var effectiveMax=reader.IsStaff?maxItemsInPeriod*2:maxItemsInPeriod;
+            var effectivePeriod = reader.IsStaff ? Math.Max(1, periodInDays / 2) : periodInDays;
+            var effectiveMax = reader.IsStaff ? maxItemsInPeriod * 2 : maxItemsInPeriod;
             var fromDate = loanDate.Date.AddDays(-effectivePeriod);
 
             var alreadyBorrowedToday =
