@@ -168,6 +168,50 @@ namespace Library.Tests.Domain
 
             Assert.Equal(0, edition.Id);
         }
+        [Fact]
+        public void Edition_Type_Defaults_To_Null()
+        {
+            var edition = new Edition
+            {
+                Book = new Book { Id = 1, Title = "Test" },
+                Publisher = "Pub",
+                Year = 2024,
+                EditionNumber = 1,
+                Pages = 200
+            };
+
+            Assert.Null(edition.Type);
+        }
+        [Fact]
+        public void Edition_Type_CanBeSet()
+        {
+            var edition = new Edition
+            {
+                Book = new Book { Id = 1, Title = "Test" },
+                Publisher = "Pub",
+                Year = 2024,
+                EditionNumber = 1,
+                Pages = 200,
+                Type = "Hardcover"
+            };
+
+            Assert.Equal("Hardcover", edition.Type);
+        }
+        [Fact]
+        public void Edition_BookItems_Starts_Empty()
+        {
+            var edition = new Edition
+            {
+                Book = new Book { Id = 1, Title = "Test" },
+                Publisher = "Pub",
+                Year = 2024,
+                EditionNumber = 1,
+                Pages = 200
+            };
+
+            Assert.Empty(edition.BookItems);
+        }
+
 
     }
 }
