@@ -87,5 +87,134 @@ namespace Library.Tests
 
             Assert.Null(exception);
         }
+
+        [Fact]
+        public void ValidateDistinctDomainsForLoan_Throws_When_Items_Is_Null()
+        {
+            var service = new LoanService();
+
+            Assert.Throws<ArgumentNullException>(() =>
+                service.ValidateDistinctDomainsForLoan(null!));
+        }
+
+        [Fact]
+        public void ValidateDistinctDomainsForLoan_Throws_When_No_Domains_Assigned()
+        {
+            var items = new List<BookItem>
+    {
+        CreateBookItemWithDomains(),
+        CreateBookItemWithDomains(),
+        CreateBookItemWithDomains()
+    };
+
+            var service = new LoanService();
+
+            Assert.Throws<InvalidOperationException>(() =>
+                service.ValidateDistinctDomainsForLoan(items));
+        }
+
+        [Fact]
+        public void ValidateDistinctDomainsForLoan_Throws_When_DomainIds_Are_Duplicate()
+        {
+            var d1 = new BookDomain { Id = 1, Name = "IT" };
+            var d2 = new BookDomain { Id = 1, Name = "IT copy" };
+
+            var items = new List<BookItem>
+    {
+        CreateBookItemWithDomains(d1),
+        CreateBookItemWithDomains(d2),
+        CreateBookItemWithDomains(d1)
+    };
+
+            var service = new LoanService();
+
+            Assert.Throws<InvalidOperationException>(() =>
+                service.ValidateDistinctDomainsForLoan(items));
+        }
+
+        [Fact]
+        public void ValidateDistinctDomainsForLoan_Throws_When_Four_Items_Same_Domain()
+        {
+            var domain = CreateDomain(1, "IT");
+
+            var items = new List<BookItem>
+    {
+        CreateBookItemWithDomains(domain),
+        CreateBookItemWithDomains(domain),
+        CreateBookItemWithDomains(domain),
+        CreateBookItemWithDomains(domain)
+    };
+
+            var service = new LoanService();
+
+            Assert.Throws<InvalidOperationException>(() =>
+                service.ValidateDistinctDomainsForLoan(items));
+        }
+
+        [Fact]
+        public void ValidateDistinctDomainsForLoan_DoesNotThrow_When_Four_Items_Two_Domains()
+        {
+            var d1 = CreateDomain(1, "IT");
+            var d2 = CreateDomain(2, "Math");
+
+            var items = new List<BookItem>
+    {
+        CreateBookItemWithDomains(d1),
+        CreateBookItemWithDomains(d1),
+        CreateBookItemWithDomains(d2),
+        CreateBookItemWithDomains(d2)
+    };
+
+            var service = new LoanService();
+
+            var ex = Record.Exception(() =>
+                service.ValidateDistinctDomainsForLoan(items));
+
+            Assert.Null(ex);
+        }
+        [Fact]
+        public void ValidateDistinctDomainsForLoan_DoesNotThrow_When_More_Than_Two_Domains()
+        {
+            var d1 = CreateDomain(1, "IT");
+            var d2 = CreateDomain(2, "Math");
+            var d3 = CreateDomain(3, "Physics");
+
+            var items = new List<BookItem>
+    {
+        CreateBookItemWithDomains(d1),
+        CreateBookItemWithDomains(d2),
+        CreateBookItemWithDomains(d3),
+        CreateBookItemWithDomains(d1),
+        CreateBookItemWithDomains(d2)
+    };
+
+            var service = new LoanService();
+
+            var ex = Record.Exception(() =>
+                service.ValidateDistinctDomainsForLoan(items));
+
+            Assert.Null(ex);
+        }
+        [Fact]
+        public void ValidateDistinctDomainsForLoan_Allows_Minimum_Valid_Combination()
+        {
+            var d1 = CreateDomain(1, "IT");
+            var d2 = CreateDomain(2, "Math");
+
+            var items = new List<BookItem>
+    {
+        CreateBookItemWithDomains(d1),
+        CreateBookItemWithDomains(d1),
+        CreateBookItemWithDomains(d2)
+    };
+
+            var service = new LoanService();
+
+            var ex = Record.Exception(() =>
+                service.ValidateDistinctDomainsForLoan(items));
+
+            Assert.Null(ex);
+        }
+
     }
 }
