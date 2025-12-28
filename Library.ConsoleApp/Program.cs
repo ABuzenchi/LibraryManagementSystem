@@ -1,4 +1,5 @@
 ﻿using Library.Domain;
+using Library.Domain.Exceptions;
 using Library.Service;
 using Library.Service.Configuration;
 using Library.Service.Logging;
@@ -79,7 +80,8 @@ try
             new BookDomain { Id = 3, Name = "Physics" }
         });
 }
-catch (Exception ex)
+catch (LibraryRuleExceptions ex)
 {
-    Console.WriteLine($"Exception caught: {ex.Message}");
+    Console.WriteLine($"Business rule violated: {ex.Message}");
 }
+

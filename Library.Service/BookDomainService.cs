@@ -9,6 +9,7 @@ namespace Library.Service
     using Microsoft.Extensions.Logging.Abstractions;
     using Library.Service.Logging;
     using Library.Service.Configuration;
+    using Library.Domain.Exceptions;
 
     public class BookDomainService : IBookDomainService
     {
@@ -38,8 +39,8 @@ namespace Library.Service
                 {
                     if (domainList.Any(d => d.Id == currentParent.Id))
                     {
-                        throw new InvalidOperationException(
-                            $"Domain conflict: '{domain.Name}' is a subdomain of '{currentParent.Name}'.");
+                        throw new DomainConflictException(domain.Name, currentParent.Name);
+
                     }
 
                     currentParent = currentParent.Parent;
@@ -70,7 +71,8 @@ namespace Library.Service
             if (count > rules.MaxDomainsPerBook)
             {
                 logger.LogWarning("Domain limit exceeded.Count={Count}, MaxAllowed={MaxAllowed}",domains.Count(),rules.MaxDomainsPerBook);
-                throw new InvalidOperationException($"A book cannot be assigned to more than {rules.MaxDomainsPerBook} domains.");
+               throw new MaxDomainsPerBookExceededException(rules.MaxDomainsPerBook);
+
             }
         }
     }

@@ -8,22 +8,23 @@ namespace Library.Service
     using Library.Service.Interfaces;
     using Library.Service.Logging;
     using Microsoft.Extensions.Logging;
+    using Library.Domain.Exceptions;
 
     public class LoanService : ILoanService
     {
 
-        private readonly ILogger<LoanService>logger;
+        private readonly ILogger<LoanService> logger;
         private readonly LibraryRulesSettings rules;
 
 
-        public LoanService(ILoggerFactoryProvider loggerProvider,LibraryRulesSettings rules)
+        public LoanService(ILoggerFactoryProvider loggerProvider, LibraryRulesSettings rules)
         {
-            logger=loggerProvider.CreateLogger<LoanService>();
-            this.rules=rules ?? throw new ArgumentNullException(nameof(rules)); 
+            logger = loggerProvider.CreateLogger<LoanService>();
+            this.rules = rules ?? throw new ArgumentNullException(nameof(rules));
         }
         public void ValidateLoanItemLimit(IEnumerable<BookItem> items)
         {
-            logger.LogInformation("Validation loan item limit, MaxAllowed={MaxAllowed}",rules.MaxItemsPerLoan);
+            logger.LogInformation("Validation loan item limit, MaxAllowed={MaxAllowed}", rules.MaxItemsPerLoan);
 
             if (items == null)
             {
@@ -32,14 +33,14 @@ namespace Library.Service
 
             if (items.Count() > rules.MaxItemsPerLoan)
             {
-                logger.LogWarning("Loan item limit exceeded. Count={Count},MaxAllowed={MaxAllowed}",items.Count(),rules.MaxItemsPerLoan);
-                throw new InvalidOperationException($"A loan cannot contain more than {rules.MaxItemsPerLoan} items.");
+                logger.LogWarning("Loan item limit exceeded. Count={Count},MaxAllowed={MaxAllowed}", items.Count(), rules.MaxItemsPerLoan);
+                throw new LoanItemLimitExceededException(rules.MaxItemsPerLoan);
             }
         }
 
         public void ValidateDailyLoanLimit(Reader reader, DateTime loanDate, IEnumerable<Loan> existingLoansForReader, IEnumerable<BookItem> newLoanItems)
         {
-            logger.LogInformation("Validation daily loan limit for reader {ReaderId} on {Date}",reader?.Id, loanDate.Date);
+            logger.LogInformation("Validation daily loan limit for reader {ReaderId} on {Date}", reader?.Id, loanDate.Date);
             if (reader == null)
             {
                 throw new ArgumentNullException(nameof(reader));
@@ -62,7 +63,7 @@ namespace Library.Service
 
             if (reader.IsStaff)
             {
-                logger.LogInformation("Reader {ReaderId} is staff. Daily loan limit ignored",reader.Id);
+                logger.LogInformation("Reader {ReaderId} is staff. Daily loan limit ignored", reader.Id);
                 return;
             }
 
@@ -79,8 +80,8 @@ namespace Library.Service
 
             if (totalForToday > rules.MaxItemsPerDay)
             {
-                logger.LogWarning("Daily loan limit exceeded for reader {ReaderId}. Attempted={Total}, Limit={Limit}",reader.Id,totalForToday,rules.MaxItemsPerDay);
-                throw new InvalidOperationException($"Daily loan limit exceeded. Maximum allowed is {rules.MaxItemsPerDay} items per day.");
+                logger.LogWarning("Daily loan limit exceeded for reader {ReaderId}. Attempted={Total}, Limit={Limit}", reader.Id, totalForToday, rules.MaxItemsPerDay);
+                throw new DailyLoanLimitExceededException(rules.MaxItemsPerDay);
             }
         }
 
@@ -115,7 +116,7 @@ namespace Library.Service
 
         public void ValidateBookAvailabilityForLoan(Book book, IEnumerable<BookItem> allItemsForBooks, IEnumerable<BookItem> currentlyLoanedItems)
         {
-            logger.LogInformation("Validating availibility for book {BookId}",book?.Id);
+            logger.LogInformation("Validating availibility for book {BookId}", book?.Id);
 
             if (book == null)
             {
@@ -136,30 +137,30 @@ namespace Library.Service
 
             if (totalItems == 0)
             {
-                logger.LogWarning("No physical copies exist for book {BookId}",book.Id);
-                throw new InvalidOperationException("Cannot loan a book with no psysical copies");
+                logger.LogWarning("No physical copies exist for book {BookId}", book.Id);
+                throw new BookAvailabilityException("Cannot loan a book with no physical copies");
             }
 
             var loanableItems = allItemsForBooks.Where(i => !i.IsReadingRoomOnly).ToList();
 
             if (!loanableItems.Any())
             {
-                logger.LogWarning("All copies are reading-room-only for book {BookId}",book.Id);
-                throw new InvalidOperationException("All copies of this book are restricted to the reading room");
+                logger.LogWarning("All copies are reading-room-only for book {BookId}", book.Id);
+                throw new BookAvailabilityException("All copies of this book are restricted to the reading room");
             }
 
             var availableItems = loanableItems.Except(currentlyLoanedItems).Count();
             var minimumRequired = (int)Math.Ceiling(totalItems * 0.10);
             if (availableItems < minimumRequired)
             {
-                logger.LogWarning("Not enough available copies for book {BookId}. Available={Available}, Required={Required}",book.Id, availableItems,minimumRequired);
-                throw new InvalidOperationException("Not enough available copies to allow loaning this book");
+                logger.LogWarning("Not enough available copies for book {BookId}. Available={Available}, Required={Required}", book.Id, availableItems, minimumRequired);
+                throw new BookAvailabilityException("Not enough available copies to allow loaning this book");
             }
         }
 
         public void ValidateBookReborrowDelta(Reader reader, Book book, DateTime loanDate, IEnumerable<Loan> previousLoans)
         {
-            logger.LogInformation("Validating reborrow delta for reader {ReaderId} and book {BookId}",reader?.Id,book?.Id);
+            logger.LogInformation("Validating reborrow delta for reader {ReaderId} and book {BookId}", reader?.Id, book?.Id);
             if (reader == null)
             {
                 throw new ArgumentNullException(nameof(reader));
@@ -201,8 +202,8 @@ namespace Library.Service
 
             if (daysSinceLastLoan < effectiveDelta)
             {
-                logger.LogWarning("Reborrow delta violated for reader {ReaderId}, book {BookId}. DaysSienceLastLoan={Days}",reader.Id,book.Id,daysSinceLastLoan);
-                throw new InvalidOperationException($"The book cannot be borrowed again within {rules.ReborrowDeltaDays} days.");
+                logger.LogWarning("Reborrow delta violated for reader {ReaderId}, book {BookId}. DaysSienceLastLoan={Days}", reader.Id, book.Id, daysSinceLastLoan);
+                throw new ReborrowDeltaException(rules.ReborrowDeltaDays);
             }
         }
 
@@ -228,7 +229,7 @@ namespace Library.Service
 
             if (extensionCount >= effectiveLimit)
             {
-                throw new InvalidOperationException($"Loan cannot be extended more than {rules.MaxLoanExtensions} times.");
+                throw new LoanExtensionLimitExceededException(rules.MaxLoanExtensions);
             }
         }
 
@@ -273,7 +274,7 @@ namespace Library.Service
 
             if (totalAfterThisLoan > effectiveMax)
             {
-                throw new InvalidOperationException($"Maximum of {effectiveMax} items allowed in a period of {effectivePeriod} days.");
+                throw new MaxItemsInPeriodExceededException(effectiveMax, effectivePeriod);
             }
         }
     }
