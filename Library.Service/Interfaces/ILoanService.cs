@@ -13,13 +13,13 @@ namespace Library.Service.Interfaces
         /// </summary>
         /// <param name="items">Loan items</param>
         /// <param name="maxItemsperLoan">Maximum allowed items</param>
-        void ValidateLoanItemLimit(IEnumerable<BookItem> items, int maxItemsPerLoan);
+        void ValidateLoanItemLimit(IEnumerable<BookItem> items);
 
-        void ValidateDailyLoanLimit(Reader reader, DateTime loanDate, IEnumerable<Loan> existingLoansForReader, IEnumerable<BookItem> newLoanItems, int maxItemsPerDay);
+        void ValidateDailyLoanLimit(Reader reader, DateTime loanDate, IEnumerable<Loan> existingLoansForReader, IEnumerable<BookItem> newLoanItems);
         void ValidateDistinctDomainsForLoan(IEnumerable<BookItem> items);
         void ValidateBookAvailabilityForLoan(Book book, IEnumerable<BookItem> allItemsForBooks, IEnumerable<BookItem> currentlyLoanedItems);
-        void ValidateBookReborrowDelta(Reader reader, Book book, DateTime loanDate, IEnumerable<Loan> previousLoans, int deltaInDays);
-        void ValidateLoanExtensionLimit(Loan loan, IEnumerable<LoanExtension>existingExtensions, int maxExtensions);
-        void ValidateMaxItemsInPeriod(Reader reader, DateTime loanDate, IEnumerable<Loan>existingLoans, IEnumerable<BookItem>newLoanItems, int periodInDays, int maxItemsInPeriod);
+        void ValidateBookReborrowDelta(Reader reader, Book book, DateTime loanDate, IEnumerable<Loan> previousLoans);
+        void ValidateLoanExtensionLimit(Loan loan, IEnumerable<LoanExtension>existingExtensions);
+        void ValidateMaxItemsInPeriod(Reader reader, DateTime loanDate, IEnumerable<Loan>existingLoans, IEnumerable<BookItem>newLoanItems);
     }
 }

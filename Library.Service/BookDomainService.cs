@@ -8,19 +8,18 @@ namespace Library.Service
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
     using Library.Service.Logging;
+    using Library.Service.Configuration;
 
     public class BookDomainService : IBookDomainService
     {
         private readonly ILogger<BookDomainService> logger;
+        private readonly LibraryRulesSettings rules;
 
-        public BookDomainService()
-        {
-            logger = NullLogger<BookDomainService>.Instance;
-        }
-
-        public BookDomainService(ILoggerFactoryProvider loggerProvider)
+        public BookDomainService(ILoggerFactoryProvider loggerProvider, LibraryRulesSettings rules)
         {
             logger = loggerProvider.CreateLogger<BookDomainService>();
+            
+            this.rules=rules ?? throw new ArgumentNullException(nameof(rules)); 
         }
         public void ValidateNoAncestorDomainConflict(IEnumerable<BookDomain> domains)
         {
@@ -48,11 +47,11 @@ namespace Library.Service
             }
         }
 
-        public void ValidateMaxDomainsPerBook(IEnumerable<BookDomain> domains, int maxAllowedDomains)
+        public void ValidateMaxDomainsPerBook(IEnumerable<BookDomain> domains)
         {
             logger.LogInformation(
             "Validating max domains per book. MaxAllowed={MaxAllowed}",
-            maxAllowedDomains);
+            rules.MaxDomainsPerBook);
 
             if (domains == null)
             {
@@ -61,17 +60,17 @@ namespace Library.Service
 
             }
 
-            if (maxAllowedDomains <= 0)
+            if (rules.MaxDomainsPerBook <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(maxAllowedDomains), "Maximum allowed domains must be greater than zero");
+                throw new ArgumentOutOfRangeException(nameof(rules.MaxDomainsPerBook), "Maximum allowed domains must be greater than zero");
             }
 
             var count = domains.Count();
 
-            if (count > maxAllowedDomains)
+            if (count > rules.MaxDomainsPerBook)
             {
-                logger.LogWarning("Domain limit exceeded.Count={Count}, MaxAllowed={MaxAllowed}",domains.Count(),maxAllowedDomains);
-                throw new InvalidOperationException($"A book cannot be assigned to more than {maxAllowedDomains} domains.");
+                logger.LogWarning("Domain limit exceeded.Count={Count}, MaxAllowed={MaxAllowed}",domains.Count(),rules.MaxDomainsPerBook);
+                throw new InvalidOperationException($"A book cannot be assigned to more than {rules.MaxDomainsPerBook} domains.");
             }
         }
     }

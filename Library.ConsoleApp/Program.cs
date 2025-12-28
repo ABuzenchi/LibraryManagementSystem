@@ -1,5 +1,6 @@
 ﻿using Library.Domain;
 using Library.Service;
+using Library.Service.Configuration;
 using Library.Service.Logging;
 using Microsoft.Extensions.Configuration;
 
@@ -7,16 +8,17 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false)
     .Build();
 
+var rules=configuration.GetSection("LibraryRules").Get<LibraryRulesSettings>();
+
 var loggerProvider = new ConsoleLoggerFactoryProvider(configuration);
 
 Console.WriteLine("=== LoanService tests ===");
 
-var loanService = new LoanService(loggerProvider);
+var loanService = new LoanService(loggerProvider,rules);
 
 // test OK
 loanService.ValidateLoanItemLimit(
-    new List<BookItem>(),
-    maxItemsPerLoan: 5);
+    new List<BookItem>());
 
 // test cu eroare (log + exception)
 try
@@ -46,8 +48,7 @@ try
                     Pages = 100
                 }
             }
-        },
-        maxItemsPerLoan: 1);
+        });
 }
 catch (Exception ex)
 {
@@ -57,7 +58,7 @@ catch (Exception ex)
 Console.WriteLine();
 Console.WriteLine("=== BookDomainService tests ===");
 
-var domainService = new BookDomainService(loggerProvider);
+var domainService = new BookDomainService(loggerProvider,rules);
 
 // test OK
 domainService.ValidateMaxDomainsPerBook(
@@ -65,8 +66,7 @@ domainService.ValidateMaxDomainsPerBook(
     {
         new BookDomain { Id = 1, Name = "IT" },
         new BookDomain { Id = 2, Name = "Math" }
-    },
-    maxAllowedDomains: 3);
+    });
 
 // test cu eroare (log + exception)
 try
@@ -77,8 +77,7 @@ try
             new BookDomain { Id = 1, Name = "IT" },
             new BookDomain { Id = 2, Name = "Math" },
             new BookDomain { Id = 3, Name = "Physics" }
-        },
-        maxAllowedDomains: 2);
+        });
 }
 catch (Exception ex)
 {
