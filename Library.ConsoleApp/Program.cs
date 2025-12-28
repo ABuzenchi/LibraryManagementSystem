@@ -1,8 +1,13 @@
 ﻿using Library.Domain;
 using Library.Service;
 using Library.Service.Logging;
+using Microsoft.Extensions.Configuration;
 
-var loggerProvider = new ConsoleLoggerFactoryProvider();
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: false)
+    .Build();
+
+var loggerProvider = new ConsoleLoggerFactoryProvider(configuration);
 
 Console.WriteLine("=== LoanService tests ===");
 

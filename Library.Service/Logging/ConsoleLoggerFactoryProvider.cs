@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Library.Service.Logging
@@ -6,13 +7,13 @@ namespace Library.Service.Logging
     {
         private readonly ILoggerFactory loggerFactory;
 
-        public ConsoleLoggerFactoryProvider()
+        public ConsoleLoggerFactoryProvider(IConfiguration configuration)
         {
             loggerFactory = LoggerFactory.Create(builder =>
             {
                 builder
-                    .AddConsole()
-                    .SetMinimumLevel(LogLevel.Information);
+                    .AddConfiguration(configuration.GetSection("Logging"))
+                    .AddConsole();
             });
         }
 
