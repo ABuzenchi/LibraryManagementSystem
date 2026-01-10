@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Library.Domain;
 using Library.Service;
+using Library.Tests.TestHelpers;
 using Xunit;
 
 namespace Library.Tests
@@ -47,21 +48,20 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_Reader_Is_Null()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             Assert.Throws<ArgumentNullException>(() =>
                 service.ValidateDailyLoanLimit(
                     null!,
                     DateTime.Today,
                     new List<Loan>(),
-                    new List<BookItem>(),
-                    2));
+                    new List<BookItem>()));
         }
 
         [Fact]
         public void Throws_When_ExistingLoans_Null()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             Assert.Throws<ArgumentNullException>(() =>
@@ -69,14 +69,13 @@ namespace Library.Tests
                     reader,
                     DateTime.Today,
                     null!,
-                    new List<BookItem>(),
-                    2));
+                    new List<BookItem>()));
         }
 
         [Fact]
         public void Throws_When_NewItems_Null()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             Assert.Throws<ArgumentNullException>(() =>
@@ -84,14 +83,13 @@ namespace Library.Tests
                     reader,
                     DateTime.Today,
                     new List<Loan>(),
-                    null!,
-                    2));
+                    null!));
         }
 
         [Fact]
         public void Throws_When_Limit_Is_Zero()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay:0);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -99,14 +97,13 @@ namespace Library.Tests
                     reader,
                     DateTime.Today,
                     new List<Loan>(),
-                    new List<BookItem>(),
-                    0));
+                    new List<BookItem>()));
         }
 
         [Fact]
         public void DoesNotThrow_When_No_Loans_Today()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay:2);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var ex = Record.Exception(() =>
@@ -114,8 +111,7 @@ namespace Library.Tests
                     reader,
                     DateTime.Today,
                     new List<Loan>(),
-                    new List<BookItem> { CreateItem() },
-                    2));
+                    new List<BookItem> { CreateItem() }));
 
             Assert.Null(ex);
         }
@@ -123,7 +119,7 @@ namespace Library.Tests
         [Fact]
         public void DoesNotThrow_When_Exactly_At_Daily_Limit()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay:2);
             var reader = new Reader { Id = 1, Name = "Ana" };
             var today = DateTime.Today;
 
@@ -137,8 +133,7 @@ namespace Library.Tests
                     reader,
                     today,
                     loans,
-                    new List<BookItem> { CreateItem() },
-                    2));
+                    new List<BookItem> { CreateItem() }));
 
             Assert.Null(ex);
         }
@@ -146,7 +141,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_Daily_Limit_Exceeded()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay:2);
             var reader = new Reader { Id = 1, Name = "Ana" };
             var today = DateTime.Today;
 
@@ -160,14 +155,13 @@ namespace Library.Tests
                     reader,
                     today,
                     loans,
-                    new List<BookItem> { CreateItem() },
-                    2));
+                    new List<BookItem> { CreateItem() }));
         }
 
         [Fact]
         public void Ignores_Loans_From_Other_Day()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
             var reader = new Reader { Id = 1, Name = "Ana" };
             var yesterday = DateTime.Today.AddDays(-1);
 
@@ -181,8 +175,7 @@ namespace Library.Tests
                     reader,
                     DateTime.Today,
                     loans,
-                    new List<BookItem> { CreateItem() },
-                    1));
+                    new List<BookItem> { CreateItem() }));
 
             Assert.Null(ex);
         }
@@ -190,7 +183,7 @@ namespace Library.Tests
         [Fact]
         public void Ignores_Loans_For_Other_Reader()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
             var reader1 = new Reader { Id = 1, Name = "Ana" };
             var reader2 = new Reader { Id = 2, Name = "Ion" };
 
@@ -204,8 +197,7 @@ namespace Library.Tests
                     reader1,
                     DateTime.Today,
                     loans,
-                    new List<BookItem> { CreateItem() },
-                    1));
+                    new List<BookItem> { CreateItem() }));
 
             Assert.Null(ex);
         }
@@ -213,7 +205,7 @@ namespace Library.Tests
         [Fact]
         public void DoesNotThrow_When_NewItems_Empty()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var ex = Record.Exception(() =>
@@ -221,8 +213,7 @@ namespace Library.Tests
                     reader,
                     DateTime.Today,
                     new List<Loan>(),
-                    new List<BookItem>(),
-                    1));
+                    new List<BookItem>()));
 
             Assert.Null(ex);
         }

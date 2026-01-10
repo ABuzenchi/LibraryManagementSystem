@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Library.Domain;
 using Library.Service;
+using Library.Tests.TestHelpers;
 using Xunit;
 
 namespace Library.Tests
@@ -32,7 +33,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_Book_Is_Null()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             Assert.Throws<ArgumentNullException>(() =>
                 service.ValidateBookAvailabilityForLoan(
@@ -44,7 +45,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_AllItems_Is_Null()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var book = CreateBook();
 
             Assert.Throws<ArgumentNullException>(() =>
@@ -57,7 +58,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_LoanedItems_Is_Null()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var book = CreateBook();
 
             Assert.Throws<ArgumentNullException>(() =>
@@ -70,7 +71,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_No_Copies_Exist()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var book = CreateBook();
 
             Assert.Throws<InvalidOperationException>(() =>
@@ -83,7 +84,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_All_Copies_Are_ReadingRoomOnly()
         {
-            var service = new LoanService();
+            var service =LoanServiceTestFactory.Create();
             var book = CreateBook();
 
             var items = new List<BookItem>
@@ -102,7 +103,7 @@ namespace Library.Tests
         [Fact]
         public void DoesNotThrow_When_Enough_Copies_Available()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var book = CreateBook();
 
             var allItems = new List<BookItem>
@@ -137,7 +138,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_Available_Copies_Below_TenPercent()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var book = CreateBook();
 
             var allItems = new List<BookItem>();
@@ -160,7 +161,7 @@ namespace Library.Tests
         [Fact]
         public void DoesNotThrow_When_Available_Exactly_TenPercent()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var book = CreateBook();
 
             var allItems = new List<BookItem>();

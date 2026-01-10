@@ -2,12 +2,16 @@ using System;
 using System.Collections.Generic;
 using Library.Domain;
 using Library.Service;
+using Library.Service.Configuration;
 using Xunit;
+using Library.Tests.TestHelpers;
+
 
 namespace Library.Tests
 {
     public class LoanServiceEdgeCaseTests
     {
+
         private static BookItem CreateItem()
         {
             return new BookItem
@@ -48,7 +52,7 @@ namespace Library.Tests
         [Fact]
         public void DailyLoanLimit_Allows_DateTime_MinValue()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var ex = Record.Exception(() =>
@@ -56,8 +60,7 @@ namespace Library.Tests
                     reader,
                     DateTime.MinValue,
                     new List<Loan>(),
-                    new List<BookItem>(),
-                    1));
+                    new List<BookItem>()));
 
             Assert.Null(ex);
         }
@@ -66,7 +69,7 @@ namespace Library.Tests
         [Fact]
         public void DailyLoanLimit_Allows_DateTime_MaxValue()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var ex = Record.Exception(() =>
@@ -74,8 +77,7 @@ namespace Library.Tests
                     reader,
                     DateTime.MaxValue,
                     new List<Loan>(),
-                    new List<BookItem>(),
-                    1));
+                    new List<BookItem>()));
 
             Assert.Null(ex);
         }
@@ -84,7 +86,7 @@ namespace Library.Tests
         [Fact]
         public void MaxItemsInPeriod_Allows_Period_One_Day()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsInPeriod:int.MaxValue);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var loans = new List<Loan>
@@ -97,9 +99,7 @@ namespace Library.Tests
                     reader,
                     DateTime.Today,
                     loans,
-                    new List<BookItem>(),
-                    periodInDays: 1,
-                    maxItemsInPeriod: 1));
+                    new List<BookItem>()));
 
             Assert.Null(ex);
         }
@@ -108,7 +108,7 @@ namespace Library.Tests
         [Fact]
         public void MaxItemsInPeriod_Allows_Large_Period()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var ex = Record.Exception(() =>
@@ -116,9 +116,7 @@ namespace Library.Tests
                     reader,
                     DateTime.Today,
                     new List<Loan>(),
-                    new List<BookItem>(),
-                    periodInDays: 365,
-                    maxItemsInPeriod: 100));
+                    new List<BookItem>()));
 
             Assert.Null(ex);
         }
@@ -127,12 +125,11 @@ namespace Library.Tests
         [Fact]
         public void LoanItemLimit_Allows_IntMaxValue_Limit()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:int.MaxValue);
 
             var ex = Record.Exception(() =>
                 service.ValidateLoanItemLimit(
-                    new List<BookItem> { CreateItem(), CreateItem() },
-                    int.MaxValue));
+                    new List<BookItem> { CreateItem(), CreateItem() }));
 
             Assert.Null(ex);
         }
@@ -141,7 +138,7 @@ namespace Library.Tests
         [Fact]
         public void DailyLoanLimit_Allows_Zero_New_Items()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var ex = Record.Exception(() =>
@@ -149,8 +146,7 @@ namespace Library.Tests
                     reader,
                     DateTime.Today,
                     new List<Loan>(),
-                    new List<BookItem>(),
-                    1));
+                    new List<BookItem>()));
 
             Assert.Null(ex);
         }
@@ -159,7 +155,7 @@ namespace Library.Tests
         [Fact]
         public void ReborrowDelta_Allows_DateTime_MinValue_LoanDate()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var reader = new Reader { Id = 1, Name = "Ana" };
             var book = new Book { Id = 1, Title = "Test" };
 
@@ -168,8 +164,7 @@ namespace Library.Tests
                     reader,
                     book,
                     DateTime.MinValue,
-                    new List<Loan>(),
-                    10));
+                    new List<Loan>()));
 
             Assert.Null(ex);
         }
@@ -178,7 +173,7 @@ namespace Library.Tests
         [Fact]
         public void ReborrowDelta_Allows_DateTime_MaxValue_LoanDate()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
             var reader = new Reader { Id = 1, Name = "Ana" };
             var book = new Book { Id = 1, Title = "Test" };
 
@@ -187,8 +182,7 @@ namespace Library.Tests
                     reader,
                     book,
                     DateTime.MaxValue,
-                    new List<Loan>(),
-                    10));
+                    new List<Loan>()));
 
             Assert.Null(ex);
         }
@@ -197,7 +191,7 @@ namespace Library.Tests
         [Fact]
         public void ExtensionLimit_Allows_Large_Limit()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions:int.MaxValue);
             var loan = new Loan
             {
                 Id = 1,
@@ -209,8 +203,7 @@ namespace Library.Tests
             var ex = Record.Exception(() =>
                 service.ValidateLoanExtensionLimit(
                     loan,
-                    new List<LoanExtension>(),
-                    int.MaxValue));
+                    new List<LoanExtension>()));
 
             Assert.Null(ex);
         }
@@ -219,7 +212,7 @@ namespace Library.Tests
         [Fact]
         public void BookAvailability_Allows_Large_Number_Of_Copies()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
             var book = new Book { Id = 1, Title = "Big Book" };
 
             var allItems = new List<BookItem>();
@@ -243,7 +236,7 @@ namespace Library.Tests
         [Fact]
         public void MaxItemsInPeriod_Ignores_Loans_In_Future()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(periodDays:7,maxItemsInPeriod:1);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var loans = new List<Loan>
@@ -256,9 +249,7 @@ namespace Library.Tests
                     reader,
                     DateTime.Today,
                     loans,
-                    new List<BookItem>(),
-                    7,
-                    1));
+                    new List<BookItem>()));
 
             Assert.Null(ex);
         }
@@ -267,7 +258,7 @@ namespace Library.Tests
         [Fact]
         public void DailyLoanLimit_Allows_Many_Past_Loans()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var loans = new List<Loan>();
@@ -281,8 +272,7 @@ namespace Library.Tests
                     reader,
                     DateTime.Today,
                     loans,
-                    new List<BookItem> { CreateItem() },
-                    1));
+                    new List<BookItem> { CreateItem() }));
 
             Assert.Null(ex);
         }

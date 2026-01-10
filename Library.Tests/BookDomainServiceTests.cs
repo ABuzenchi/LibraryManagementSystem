@@ -1,10 +1,24 @@
 using Library.Domain;
 using Library.Service;
+using Library.Service.Configuration;
 
 namespace Library.Tests
 {
+
     public class BookDomainServiceTests
     {
+        private static BookDomainService CreateService(int maxDomainsPerBook)
+        {
+            var rules = new LibraryRulesSettings
+            {
+                MaxDomainsPerBook = maxDomainsPerBook
+            };
+
+            var loggerProvider = new TestLoggerFactoryProvider();
+
+            return new BookDomainService(loggerProvider, rules);
+        }
+
         [Fact]
         public void ValidateMaxDomainsPerBook_ThrowsException_WhenLimitIsExceeded()
         {
@@ -15,10 +29,10 @@ namespace Library.Tests
                 new BookDomain { Id = 3, Name = "D3" }
             };
 
-            var service = new BookDomainService();
+            var service = CreateService(maxDomainsPerBook: 2);
 
             Assert.Throws<InvalidOperationException>(() =>
-                service.ValidateMaxDomainsPerBook(domains, maxAllowedDomains: 2));
+                service.ValidateMaxDomainsPerBook(domains));
         }
 
         [Fact]
@@ -30,10 +44,10 @@ namespace Library.Tests
                 new BookDomain { Id = 2, Name = "D2" }
             };
 
-            var service = new BookDomainService();
+            var service = CreateService(maxDomainsPerBook: 2);
 
             var exception = Record.Exception(() =>
-                service.ValidateMaxDomainsPerBook(domains, maxAllowedDomains: 2));
+                service.ValidateMaxDomainsPerBook(domains));
 
             Assert.Null(exception);
         }
@@ -41,43 +55,41 @@ namespace Library.Tests
         [Fact]
         public void ValidateMaxDomainsPerBook_Throws_When_Domains_Is_Null()
         {
-            var service = new BookDomainService();
+            var service = CreateService(maxDomainsPerBook: 2);
 
             Assert.Throws<ArgumentNullException>(() =>
-                service.ValidateMaxDomainsPerBook(null!, 2));
+                service.ValidateMaxDomainsPerBook(null!));
         }
+
 
         [Fact]
         public void ValidateMaxDomainsPerBook_Throws_When_Limit_Is_Zero()
         {
-            var service = new BookDomainService();
+            var service = CreateService(maxDomainsPerBook: 0);
 
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 service.ValidateMaxDomainsPerBook(
-                    new List<BookDomain>(),
-                    0));
+                    new List<BookDomain>()));
         }
 
         [Fact]
         public void ValidateMaxDomainsPerBook_Throws_When_Limit_Is_Negative()
         {
-            var service = new BookDomainService();
+            var service = CreateService(maxDomainsPerBook: -1);
 
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 service.ValidateMaxDomainsPerBook(
-                    new List<BookDomain>(),
-                    -1));
+                    new List<BookDomain>()));
         }
 
         [Fact]
         public void ValidateMaxDomainsPerBook_DoesNotThrow_When_List_Is_Empty()
         {
-            var service = new BookDomainService();
+            var service = CreateService(maxDomainsPerBook: 3); ;
 
             var ex = Record.Exception(() =>
                 service.ValidateMaxDomainsPerBook(
-                    new List<BookDomain>(),
-                    3));
+                    new List<BookDomain>()));
 
             Assert.Null(ex);
         }
@@ -92,10 +104,10 @@ namespace Library.Tests
         new BookDomain { Id = 3, Name = "D3" }
     };
 
-            var service = new BookDomainService();
+            var service = CreateService(maxDomainsPerBook: 3); ;
 
             var ex = Record.Exception(() =>
-                service.ValidateMaxDomainsPerBook(domains, 3));
+                service.ValidateMaxDomainsPerBook(domains));
 
             Assert.Null(ex);
         }
@@ -109,10 +121,10 @@ namespace Library.Tests
         new BookDomain { Id = 1, Name = "D1 duplicate" }
     };
 
-            var service = new BookDomainService();
+            var service = CreateService(maxDomainsPerBook: 1);
 
             Assert.Throws<InvalidOperationException>(() =>
-                service.ValidateMaxDomainsPerBook(domains, 1));
+                service.ValidateMaxDomainsPerBook(domains));
         }
 
         [Fact]
@@ -123,10 +135,10 @@ namespace Library.Tests
         new BookDomain { Id = 1, Name = "D1" }
     };
 
-            var service = new BookDomainService();
+            var service = CreateService(maxDomainsPerBook: 1);
 
             var ex = Record.Exception(() =>
-                service.ValidateMaxDomainsPerBook(domains, 1));
+                service.ValidateMaxDomainsPerBook(domains));
 
             Assert.Null(ex);
         }
@@ -140,10 +152,10 @@ namespace Library.Tests
         new BookDomain { Id = 2, Name = "D2" }
     };
 
-            var service = new BookDomainService();
+            var service = CreateService(maxDomainsPerBook: 100);
 
             var ex = Record.Exception(() =>
-                service.ValidateMaxDomainsPerBook(domains, 100));
+                service.ValidateMaxDomainsPerBook(domains));
 
             Assert.Null(ex);
         }

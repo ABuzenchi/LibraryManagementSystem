@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Library.Domain;
 using Library.Service;
+using Library.Tests.TestHelpers;
 using Xunit;
 
 namespace Library.Tests
@@ -42,7 +43,7 @@ namespace Library.Tests
                 CreateBookItemWithDomains(domain)
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             Assert.Throws<InvalidOperationException>(() =>
                 service.ValidateDistinctDomainsForLoan(items));
@@ -61,7 +62,7 @@ namespace Library.Tests
                 CreateBookItemWithDomains(d2)
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             var exception = Record.Exception(() =>
                 service.ValidateDistinctDomainsForLoan(items));
@@ -80,7 +81,7 @@ namespace Library.Tests
                 CreateBookItemWithDomains(domain)
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             var exception = Record.Exception(() =>
                 service.ValidateDistinctDomainsForLoan(items));
@@ -91,7 +92,7 @@ namespace Library.Tests
         [Fact]
         public void ValidateDistinctDomainsForLoan_Throws_When_Items_Is_Null()
         {
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             Assert.Throws<ArgumentNullException>(() =>
                 service.ValidateDistinctDomainsForLoan(null!));
@@ -107,7 +108,7 @@ namespace Library.Tests
         CreateBookItemWithDomains()
     };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             Assert.Throws<InvalidOperationException>(() =>
                 service.ValidateDistinctDomainsForLoan(items));
@@ -126,7 +127,7 @@ namespace Library.Tests
         CreateBookItemWithDomains(d1)
     };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             Assert.Throws<InvalidOperationException>(() =>
                 service.ValidateDistinctDomainsForLoan(items));
@@ -145,7 +146,7 @@ namespace Library.Tests
         CreateBookItemWithDomains(domain)
     };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             Assert.Throws<InvalidOperationException>(() =>
                 service.ValidateDistinctDomainsForLoan(items));
@@ -165,7 +166,7 @@ namespace Library.Tests
         CreateBookItemWithDomains(d2)
     };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             var ex = Record.Exception(() =>
                 service.ValidateDistinctDomainsForLoan(items));
@@ -188,7 +189,7 @@ namespace Library.Tests
         CreateBookItemWithDomains(d2)
     };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             var ex = Record.Exception(() =>
                 service.ValidateDistinctDomainsForLoan(items));
@@ -208,7 +209,7 @@ namespace Library.Tests
         CreateBookItemWithDomains(d2)
     };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             var ex = Record.Exception(() =>
                 service.ValidateDistinctDomainsForLoan(items));

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Library.Domain;
 using Library.Service;
+using Library.Tests.TestHelpers;
 using Xunit;
 
 namespace Library.Tests
@@ -37,7 +38,7 @@ namespace Library.Tests
                 CreateItem(book, true)
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             Assert.Throws<InvalidOperationException>(() =>
                 service.ValidateBookAvailabilityForLoan(
@@ -59,7 +60,7 @@ namespace Library.Tests
 
             var loaned = new List<BookItem>(items);
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             Assert.Throws<InvalidOperationException>(() =>
                 service.ValidateBookAvailabilityForLoan(
@@ -81,7 +82,7 @@ namespace Library.Tests
 
             var loaned = new List<BookItem>(items.Take(8));
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             var exception = Record.Exception(() =>
                 service.ValidateBookAvailabilityForLoan(
@@ -105,7 +106,7 @@ namespace Library.Tests
 
             var loaned = new List<BookItem>(items.Take(15));
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create();
 
             var exception = Record.Exception(() =>
                 service.ValidateBookAvailabilityForLoan(

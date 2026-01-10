@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Library.Domain;
 using Library.Service;
+using Library.Tests.TestHelpers;
 using Xunit;
 
 namespace Library.Tests
@@ -56,15 +57,14 @@ namespace Library.Tests
                 CreateItem()
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
 
             var exception = Record.Exception(() =>
                 service.ValidateDailyLoanLimit(
                     reader,
                     today,
                     existingLoans,
-                    newItems,
-                    maxItemsPerDay: 1));
+                    newItems));
 
             Assert.Null(exception);
         }
@@ -94,15 +94,14 @@ namespace Library.Tests
                 BookItem = CreateItem()
             });
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
 
             var exception = Record.Exception(() =>
                 service.ValidateBookReborrowDelta(
                     reader,
                     book,
                     DateTime.Today,
-                    new List<Loan> { previousLoan },
-                    deltaInDays: 10));
+                    new List<Loan> { previousLoan }));
 
             Assert.Null(exception);
         }
@@ -146,16 +145,14 @@ namespace Library.Tests
                 CreateItem()
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(periodDays:7,maxItemsInPeriod:2);
 
             var exception = Record.Exception(() =>
                 service.ValidateMaxItemsInPeriod(
                     reader,
                     today,
                     existingLoans,
-                    newItems,
-                    periodInDays: 7,
-                    maxItemsInPeriod: 2));
+                    newItems));
 
             Assert.Null(exception);
         }
@@ -194,13 +191,12 @@ namespace Library.Tests
                 }
             };
 
-            var service = new LoanService();
+            var service =LoanServiceTestFactory.Create(maxLoanExtensions:2);
 
             var exception = Record.Exception(() =>
                 service.ValidateLoanExtensionLimit(
                     loan,
-                    extensions,
-                    maxExtensions: 2));
+                    extensions));
 
             Assert.Null(exception);
         }

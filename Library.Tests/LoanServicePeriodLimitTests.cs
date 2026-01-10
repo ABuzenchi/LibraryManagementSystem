@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Library.Domain;
 using Library.Service;
+using Library.Tests.TestHelpers;
 using Xunit;
 
 namespace Library.Tests
@@ -60,12 +61,11 @@ namespace Library.Tests
                 CreateItem(new Book { Id = 3, Title = "B3" })
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(periodDays:7, maxItemsInPeriod:2);
 
             Assert.Throws<InvalidOperationException>(() =>
                 service.ValidateMaxItemsInPeriod(
-                    reader, today, loans, newItems,
-                    periodInDays: 7, maxItemsInPeriod: 2));
+                    reader, today, loans, newItems));
         }
 
         [Fact]
@@ -84,12 +84,11 @@ namespace Library.Tests
                 CreateItem(new Book { Id = 2, Title = "B2" })
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(periodDays:7, maxItemsInPeriod:2);
 
             var ex = Record.Exception(() =>
                 service.ValidateMaxItemsInPeriod(
-                    reader, today, loans, newItems,
-                    periodInDays: 7, maxItemsInPeriod: 2));
+                    reader, today, loans, newItems));
 
             Assert.Null(ex);
         }
@@ -110,12 +109,11 @@ namespace Library.Tests
                 CreateItem(new Book { Id = 1, Title = "B1" })
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(periodDays:7, maxItemsInPeriod:2);
 
             var ex = Record.Exception(() =>
                 service.ValidateMaxItemsInPeriod(
-                    reader, today, loans, newItems,
-                    periodInDays: 7, maxItemsInPeriod: 2));
+                    reader, today, loans, newItems));
 
             Assert.Null(ex);
         }
@@ -137,12 +135,11 @@ namespace Library.Tests
                 CreateItem(new Book { Id = 3, Title = "B3" })
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(periodDays:7, maxItemsInPeriod:2);
 
             Assert.Throws<InvalidOperationException>(() =>
                 service.ValidateMaxItemsInPeriod(
-                    reader, today, loans, newItems,
-                    periodInDays: 7, maxItemsInPeriod: 2));
+                    reader, today, loans, newItems));
         }
     }
 }

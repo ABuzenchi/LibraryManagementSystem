@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Library.Domain;
 using Library.Service;
+using Library.Tests.TestHelpers;
 using Xunit;
 
 namespace Library.Tests
@@ -62,10 +63,10 @@ namespace Library.Tests
                 CreateValidBookItem()
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
 
             Assert.Throws<InvalidOperationException>(() =>
-                service.ValidateLoanItemLimit(items, maxItemsPerLoan: 2));
+                service.ValidateLoanItemLimit(items));
         }
 
         [Fact]
@@ -77,10 +78,10 @@ namespace Library.Tests
                 CreateValidBookItem()
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
 
             var exception = Record.Exception(() =>
-                service.ValidateLoanItemLimit(items, maxItemsPerLoan: 2));
+                service.ValidateLoanItemLimit(items));
 
             Assert.Null(exception);
         }
@@ -101,15 +102,14 @@ namespace Library.Tests
                 CreateValidBookItem()
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
 
             Assert.Throws<InvalidOperationException>(() =>
                 service.ValidateDailyLoanLimit(
                     reader,
                     today,
                     existingLoans,
-                    newItems,
-                    maxItemsPerDay: 2));
+                    newItems));
         }
 
         [Fact]
@@ -128,15 +128,14 @@ namespace Library.Tests
                 CreateValidBookItem()
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
 
             var exception = Record.Exception(() =>
                 service.ValidateDailyLoanLimit(
                     reader,
                     today,
                     existingLoans,
-                    newItems,
-                    maxItemsPerDay: 2));
+                    newItems));
 
             Assert.Null(exception);
         }

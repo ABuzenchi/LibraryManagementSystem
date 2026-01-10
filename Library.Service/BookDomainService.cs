@@ -19,8 +19,8 @@ namespace Library.Service
         public BookDomainService(ILoggerFactoryProvider loggerProvider, LibraryRulesSettings rules)
         {
             logger = loggerProvider.CreateLogger<BookDomainService>();
-            
-            this.rules=rules ?? throw new ArgumentNullException(nameof(rules)); 
+
+            this.rules = rules ?? throw new ArgumentNullException(nameof(rules));
         }
         public void ValidateNoAncestorDomainConflict(IEnumerable<BookDomain> domains)
         {
@@ -70,8 +70,8 @@ namespace Library.Service
 
             if (count > rules.MaxDomainsPerBook)
             {
-                logger.LogWarning("Domain limit exceeded.Count={Count}, MaxAllowed={MaxAllowed}",domains.Count(),rules.MaxDomainsPerBook);
-               throw new MaxDomainsPerBookExceededException(rules.MaxDomainsPerBook);
+                logger.LogWarning("Domain limit exceeded.Count={Count}, MaxAllowed={MaxAllowed}", domains.Count(), rules.MaxDomainsPerBook);
+                throw new MaxDomainsPerBookExceededException(rules.MaxDomainsPerBook);
 
             }
         }

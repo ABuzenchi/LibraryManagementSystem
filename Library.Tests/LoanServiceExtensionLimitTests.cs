@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Library.Domain;
 using Library.Service;
+using Library.Tests.TestHelpers;
 using Xunit;
 
 namespace Library.Tests
@@ -40,13 +41,12 @@ namespace Library.Tests
                 CreateExtension(loan)
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions:2);
 
             Assert.Throws<InvalidOperationException>(() =>
                 service.ValidateLoanExtensionLimit(
                     loan,
-                    extensions,
-                    maxExtensions: 2));
+                    extensions));
         }
 
         [Fact]
@@ -59,13 +59,12 @@ namespace Library.Tests
                 CreateExtension(loan)
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions:2);
 
             var exception = Record.Exception(() =>
                 service.ValidateLoanExtensionLimit(
                     loan,
-                    extensions,
-                    maxExtensions: 2));
+                    extensions));
 
             Assert.Null(exception);
         }
@@ -75,13 +74,12 @@ namespace Library.Tests
         {
             var loan = CreateLoan(1);
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions:2);
 
             var exception = Record.Exception(() =>
                 service.ValidateLoanExtensionLimit(
                     loan,
-                    new List<LoanExtension>(),
-                    maxExtensions: 2));
+                    new List<LoanExtension>()));
 
             Assert.Null(exception);
         }
@@ -98,13 +96,11 @@ namespace Library.Tests
                 CreateExtension(loan2)
             };
 
-            var service = new LoanService();
-
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions:2);
             var exception = Record.Exception(() =>
                 service.ValidateLoanExtensionLimit(
                     loan1,
-                    extensions,
-                    maxExtensions: 2));
+                    extensions));
 
             Assert.Null(exception);
         }
@@ -113,13 +109,12 @@ namespace Library.Tests
         public void Throws_WhenMaxExtensionsIsZero()
         {
             var loan = CreateLoan(1);
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions:0);
 
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 service.ValidateLoanExtensionLimit(
                     loan,
-                    new List<LoanExtension>(),
-                    maxExtensions: 0));
+                    new List<LoanExtension>()));
         }
     }
 }

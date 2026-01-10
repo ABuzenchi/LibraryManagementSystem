@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Library.Domain;
 using Library.Service;
+using Library.Tests.TestHelpers;
 using Xunit;
 
 namespace Library.Tests
@@ -58,15 +59,13 @@ namespace Library.Tests
                 CreateLoan(reader, DateTime.Today.AddDays(-5), book)
             };
 
-            var service = new LoanService();
-
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
             Assert.Throws<InvalidOperationException>(() =>
                 service.ValidateBookReborrowDelta(
                     reader,
                     book,
                     DateTime.Today,
-                    previousLoans,
-                    deltaInDays: 10));
+                    previousLoans));
         }
 
         [Fact]
@@ -80,15 +79,14 @@ namespace Library.Tests
                 CreateLoan(reader, DateTime.Today.AddDays(-15), book)
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
 
             var exception = Record.Exception(() =>
                 service.ValidateBookReborrowDelta(
                     reader,
                     book,
                     DateTime.Today,
-                    previousLoans,
-                    deltaInDays: 10));
+                    previousLoans));
 
             Assert.Null(exception);
         }
@@ -99,15 +97,14 @@ namespace Library.Tests
             var reader = new Reader { Id = 1, Name = "Ana" };
             var book = CreateBook(1);
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
 
             var exception = Record.Exception(() =>
                 service.ValidateBookReborrowDelta(
                     reader,
                     book,
                     DateTime.Today,
-                    new List<Loan>(),
-                    deltaInDays: 10));
+                    new List<Loan>()));
 
             Assert.Null(exception);
         }
@@ -124,15 +121,14 @@ namespace Library.Tests
                 CreateLoan(reader, DateTime.Today.AddDays(-2), book2)
             };
 
-            var service = new LoanService();
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
 
             var exception = Record.Exception(() =>
                 service.ValidateBookReborrowDelta(
                     reader,
                     book1,
                     DateTime.Today,
-                    previousLoans,
-                    deltaInDays: 10));
+                    previousLoans));
 
             Assert.Null(exception);
         }
