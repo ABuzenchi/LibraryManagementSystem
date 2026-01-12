@@ -20,29 +20,21 @@ namespace Library.Tests.Domain
         }
 
         [Fact]
-        public void AddDomain_AddsDomain_WhenValid()
+        public void Book_Domains_CanAddDomain()
         {
-            var book = new Book { Title = "Test" };
-            var domain = new BookDomain { Id = 1, Name = "IT" };
-
-            book.AddDomain(domain, maxDomainsPerBook: 3);
-
+            var book = new Book { Id = 1, Title = "Test" };
+            book.Domains.Add(new BookDomain { Id = 1, Name = "IT" });
             Assert.Single(book.Domains);
-            Assert.Contains(domain, book.Domains);
         }
-
 
         [Fact]
-        public void AddDomain_Throws_WhenMaxDomainsExceeded()
+        public void Book_CanHaveMultipleDomains()
         {
-            var book = new Book { Title = "Test" };
-
-            book.AddDomain(new BookDomain { Id = 1, Name = "IT" }, 1);
-
-            Assert.Throws<InvalidOperationException>(() =>
-                book.AddDomain(new BookDomain { Id = 2, Name = "Math" }, 1));
+            var book = new Book { Id = 1, Title = "Test" };
+            book.Domains.Add(new BookDomain { Id = 1, Name = "IT" });
+            book.Domains.Add(new BookDomain { Id = 2, Name = "Math" });
+            Assert.Equal(2, book.Domains.Count);
         }
-
 
         [Fact]
         public void Book_Id_Defaults_To_Zero()
@@ -60,36 +52,25 @@ namespace Library.Tests.Domain
         }
 
         [Fact]
-        public void AddDomain_Throws_WhenAncestorDomainIsAdded()
+        public void Book_Domains_CanBeCleared()
         {
-            var root = new BookDomain { Id = 1, Name = "Science" };
-            var child = new BookDomain { Id = 2, Name = "IT", Parent = root };
-
-            var book = new Book { Title = "Test" };
-
-            book.AddDomain(child, 3);
-
-            Assert.Throws<InvalidOperationException>(() =>
-                book.AddDomain(root, 3));
+            var book = new Book { Id = 1, Title = "Test" };
+            book.Domains.Add(new BookDomain { Id = 1, Name = "IT" });
+            book.Domains.Clear();
+            Assert.Empty(book.Domains);
         }
-
 
         [Fact]
-        public void GetAllDomains_ReturnsInheritedDomains()
+        public void Book_Domains_Allows_DuplicateDomainReferences()
         {
-            var root = new BookDomain { Id = 1, Name = "Science" };
-            var child = new BookDomain { Id = 2, Name = "IT", Parent = root };
+            var book = new Book { Id = 1, Title = "Test" };
+            var domain = new BookDomain { Id = 1, Name = "IT" };
 
-            var book = new Book { Title = "Test" };
-            book.AddDomain(child, 3);
+            book.Domains.Add(domain);
+            book.Domains.Add(domain);
 
-            var allDomains = book.GetAllDomains();
-
-            Assert.Equal(2, allDomains.Count);
-            Assert.Contains(root, allDomains);
-            Assert.Contains(child, allDomains);
+            Assert.Equal(2, book.Domains.Count);
         }
-
 
     }
 }
