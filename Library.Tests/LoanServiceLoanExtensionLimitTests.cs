@@ -105,7 +105,7 @@ namespace Library.Tests
                 new LoanExtension { Loan = loan, DaysExtended = 7, ExtensionDate = DateTime.Today }
             };
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<Library.Domain.Exceptions.LoanExtensionLimitExceededException>(() =>
                 service.ValidateLoanExtensionLimit(
                     loan,
                     extensions));
@@ -160,7 +160,7 @@ namespace Library.Tests
                 new LoanExtension { Loan = loan, DaysExtended = 7, ExtensionDate = DateTime.Today }
             };
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<Library.Domain.Exceptions.LoanExtensionLimitExceededException>(() =>
                 service.ValidateLoanExtensionLimit(
                     loan,
                     extensions));

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Library.Domain;
+using Library.Domain.Exceptions;
 using Library.Service;
 using Library.Tests.TestHelpers;
 using Xunit;
@@ -164,7 +165,7 @@ namespace Library.Tests
                 CreateLoan(reader, today.AddDays(-1), 2)
             };
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<MaxItemsInPeriodExceededException>(() =>
                 service.ValidateMaxItemsInPeriod(
                     reader,
                     today,

@@ -24,19 +24,35 @@ namespace Library.Service
         }
         public void ValidateLoanItemLimit(IEnumerable<BookItem> items)
         {
-            logger.LogInformation("Validation loan item limit, MaxAllowed={MaxAllowed}", rules.MaxItemsPerLoan);
+            logger.LogInformation(
+                "Validation loan item limit, MaxAllowed={MaxAllowed}",
+                rules.MaxItemsPerLoan);
 
             if (items == null)
             {
                 throw new ArgumentNullException(nameof(items));
             }
 
-            if (items.Count() > rules.MaxItemsPerLoan)
+            if (rules.MaxItemsPerLoan <= 0)
             {
-                logger.LogWarning("Loan item limit exceeded. Count={Count},MaxAllowed={MaxAllowed}", items.Count(), rules.MaxItemsPerLoan);
+                throw new ArgumentOutOfRangeException(
+                    nameof(rules.MaxItemsPerLoan),
+                    "Maximum items per loan must be greater than zero");
+            }
+
+            var count = items.Count();
+
+            if (count > rules.MaxItemsPerLoan)
+            {
+                logger.LogWarning(
+                    "Loan item limit exceeded. Count={Count}, MaxAllowed={MaxAllowed}",
+                    count,
+                    rules.MaxItemsPerLoan);
+
                 throw new LoanItemLimitExceededException(rules.MaxItemsPerLoan);
             }
         }
+
 
         public void ValidateDailyLoanLimit(Reader reader, DateTime loanDate, IEnumerable<Loan> existingLoansForReader, IEnumerable<BookItem> newLoanItems)
         {

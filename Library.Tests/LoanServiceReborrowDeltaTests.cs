@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Library.Domain;
+using Library.Domain.Exceptions;
 using Library.Service;
 using Library.Tests.TestHelpers;
 using Xunit;
@@ -151,7 +152,7 @@ namespace Library.Tests
                 CreateLoan(reader, DateTime.Today.AddDays(-3), book)
             };
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<ReborrowDeltaException>(() =>
                 service.ValidateBookReborrowDelta(
                     reader,
                     book,
@@ -220,7 +221,7 @@ namespace Library.Tests
                 CreateLoan(reader, DateTime.Today.AddDays(-3), book)
             };
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<ReborrowDeltaException>(() =>
                 service.ValidateBookReborrowDelta(
                     reader,
                     book,

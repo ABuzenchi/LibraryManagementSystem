@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Library.Domain;
+using Library.Domain.Exceptions;
 using Library.Service;
 using Library.Tests.TestHelpers;
 using Xunit;
@@ -60,7 +61,7 @@ namespace Library.Tests
             };
 
             var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<ReborrowDeltaException>(() =>
                 service.ValidateBookReborrowDelta(
                     reader,
                     book,

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Library.Domain;
+using Library.Domain.Exceptions;
 using Library.Service;
 using Library.Tests.TestHelpers;
 using Xunit;
@@ -40,7 +41,7 @@ namespace Library.Tests
 
             var service = LoanServiceTestFactory.Create();
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<BookAvailabilityException>(() =>
                 service.ValidateBookAvailabilityForLoan(
                     book,
                     items,
@@ -62,7 +63,7 @@ namespace Library.Tests
 
             var service = LoanServiceTestFactory.Create();
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<BookAvailabilityException>(() =>
                 service.ValidateBookAvailabilityForLoan(
                     book,
                     items,

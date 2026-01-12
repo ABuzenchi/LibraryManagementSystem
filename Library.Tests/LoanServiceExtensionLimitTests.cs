@@ -43,7 +43,7 @@ namespace Library.Tests
 
             var service = LoanServiceTestFactory.Create(maxLoanExtensions:2);
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<Library.Domain.Exceptions.LoanExtensionLimitExceededException>(() =>
                 service.ValidateLoanExtensionLimit(
                     loan,
                     extensions));

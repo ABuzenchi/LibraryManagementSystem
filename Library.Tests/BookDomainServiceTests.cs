@@ -1,4 +1,5 @@
 using Library.Domain;
+using Library.Domain.Exceptions;
 using Library.Service;
 using Library.Service.Configuration;
 
@@ -31,7 +32,7 @@ namespace Library.Tests
 
             var service = CreateService(maxDomainsPerBook: 2);
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<MaxDomainsPerBookExceededException>(() =>
                 service.ValidateMaxDomainsPerBook(domains));
         }
 
@@ -123,7 +124,7 @@ namespace Library.Tests
 
             var service = CreateService(maxDomainsPerBook: 1);
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<MaxDomainsPerBookExceededException>(() =>
                 service.ValidateMaxDomainsPerBook(domains));
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Library.Domain;
+using Library.Domain.Exceptions;
 using Library.Service;
 using Library.Tests.TestHelpers;
 using Xunit;
@@ -63,9 +64,9 @@ namespace Library.Tests
                 CreateValidBookItem()
             };
 
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 2);
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<LoanItemLimitExceededException>(() =>
                 service.ValidateLoanItemLimit(items));
         }
 
@@ -78,7 +79,7 @@ namespace Library.Tests
                 CreateValidBookItem()
             };
 
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 2);
 
             var exception = Record.Exception(() =>
                 service.ValidateLoanItemLimit(items));
@@ -93,24 +94,26 @@ namespace Library.Tests
             var today = DateTime.Today;
 
             var existingLoans = new List<Loan>
-            {
-                CreateLoan(reader, today, 2)
-            };
+    {
+        CreateLoan(reader, today, 2)
+    };
 
             var newItems = new List<BookItem>
-            {
-                CreateValidBookItem()
-            };
+    {
+        CreateValidBookItem()
+    };
 
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
+            // 🔴 CORECT: setăm MaxItemsPerDay
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay: 2);
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<DailyLoanLimitExceededException>(() =>
                 service.ValidateDailyLoanLimit(
                     reader,
                     today,
                     existingLoans,
                     newItems));
         }
+
 
         [Fact]
         public void ValidateDailyLoanLimit_DoesNotThrow_WhenWithinDailyLimit()
@@ -128,7 +131,7 @@ namespace Library.Tests
                 CreateValidBookItem()
             };
 
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 2);
 
             var exception = Record.Exception(() =>
                 service.ValidateDailyLoanLimit(

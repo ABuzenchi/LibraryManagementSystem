@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Library.Domain;
+using Library.Domain.Exceptions;
 using Library.Service;
 using Library.Tests.TestHelpers;
 using Xunit;
@@ -27,7 +28,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_Items_Null()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 2);
 
             Assert.Throws<ArgumentNullException>(() =>
                 service.ValidateLoanItemLimit(null!));
@@ -36,7 +37,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_Limit_Is_Zero()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:0);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 0);
 
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 service.ValidateLoanItemLimit(new List<BookItem>()));
@@ -45,7 +46,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_Limit_Is_Negative()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:-1);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: -1);
 
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 service.ValidateLoanItemLimit(new List<BookItem>()));
@@ -54,7 +55,7 @@ namespace Library.Tests
         [Fact]
         public void DoesNotThrow_When_Items_Empty()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:3);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 3);
 
             var ex = Record.Exception(() =>
                 service.ValidateLoanItemLimit(new List<BookItem>()));
@@ -65,7 +66,7 @@ namespace Library.Tests
         [Fact]
         public void DoesNotThrow_When_Items_Below_Limit()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 2);
 
             var items = new List<BookItem>
             {
@@ -81,7 +82,7 @@ namespace Library.Tests
         [Fact]
         public void DoesNotThrow_When_Items_Exactly_At_Limit()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 2);
 
             var items = new List<BookItem>
             {
@@ -98,7 +99,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_Items_Above_Limit()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 2);
 
             var items = new List<BookItem>
             {
@@ -107,14 +108,15 @@ namespace Library.Tests
                 CreateItem()
             };
 
-            Assert.Throws<InvalidOperationException>(() =>
-                service.ValidateLoanItemLimit(items));
+            Assert.Throws<LoanItemLimitExceededException>(() =>
+     service.ValidateLoanItemLimit(items));
+
         }
 
         [Fact]
         public void Throws_When_Limit_Is_One_And_More_Items()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:1);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 1);
 
             var items = new List<BookItem>
             {
@@ -122,14 +124,14 @@ namespace Library.Tests
                 CreateItem()
             };
 
-            Assert.Throws<InvalidOperationException>(() =>
-                service.ValidateLoanItemLimit(items));
+            Assert.Throws<LoanItemLimitExceededException>(() =>
+       service.ValidateLoanItemLimit(items));
         }
 
         [Fact]
         public void DoesNotThrow_When_Limit_Is_Large()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:100);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 100);
 
             var items = new List<BookItem>
             {
@@ -147,7 +149,7 @@ namespace Library.Tests
         [Fact]
         public void DoesNotThrow_With_Different_Items_Same_Count()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:2);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: 2);
 
             var items = new List<BookItem>
             {
