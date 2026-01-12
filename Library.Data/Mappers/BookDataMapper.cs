@@ -1,14 +1,15 @@
 using Library.Domain;
 using Npgsql;
 using Dapper;
+using Library.Data.Interfaces;
 
-namespace Library.Data.Repositories
+namespace Library.Data.Mappers
 {
-    public class BookRepository
+    public class BookDataMapper:IBookDataMapper
     {
         private readonly NpgsqlConnection _connection;
 
-        public BookRepository(NpgsqlConnection connection)
+        public BookDataMapper(NpgsqlConnection connection)
         {
             _connection=connection;
         }
