@@ -1,5 +1,3 @@
-
-
 namespace Library.Tests
 {
     using Library.Domain;
@@ -20,7 +18,6 @@ namespace Library.Tests
 
             return new BookDomainService(loggerProvider, rules);
         }
-
 
         [Fact]
         public void ValidateMaxDomainsPerBook_DoesNotThrow_WhenWithinLimit()
@@ -62,12 +59,12 @@ namespace Library.Tests
         [Fact]
         public void ValidateMaxDomainsPerBook_Throws_When_Limit_Is_Exceeded()
         {
-            var domains = new List<BookDomain>
-    {
-        new BookDomain { Id = 1, Name = "D1" },
-        new BookDomain { Id = 2, Name = "D2" },
-        new BookDomain { Id = 3, Name = "D3" }
-    };
+         var domains = new List<BookDomain>
+            {
+              new BookDomain { Id = 1, Name = "D1" },
+              new BookDomain { Id = 2, Name = "D2" },
+              new BookDomain { Id = 3, Name = "D3" }
+             };
 
             var service = CreateService(maxDomainsPerBook: 2);
 
@@ -165,10 +162,10 @@ namespace Library.Tests
         public void ValidateMaxDomainsPerBook_Handles_Large_Limit()
         {
             var domains = new List<BookDomain>
-    {
-        new BookDomain { Id = 1, Name = "D1" },
-        new BookDomain { Id = 2, Name = "D2" }
-    };
+        {
+          new BookDomain { Id = 1, Name = "D1" },
+          new BookDomain { Id = 2, Name = "D2" }
+        };
 
             var service = CreateService(maxDomainsPerBook: 100);
 
@@ -177,6 +174,5 @@ namespace Library.Tests
 
             Assert.Null(ex);
         }
-
     }
 }

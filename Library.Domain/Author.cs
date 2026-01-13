@@ -3,12 +3,12 @@
 namespace Library.Domain
 {
     /// <summary>
-    /// Represents an author of books
+    /// Represents an author of books.
     /// </summary>
     public class Author
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the author
+        /// Gets or sets the unique identifier of the author.
         /// </summary>
         public int Id { get; set; }
 

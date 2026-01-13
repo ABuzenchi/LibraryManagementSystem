@@ -103,6 +103,6 @@ namespace Library.Service.Interfaces
         /// <param name="newLoanItems">
         /// The items that are about to be loaned.
         /// </param>
-        void ValidateMaxItemsInPeriod(Reader reader, DateTime loanDate, IEnumerable<Loan>existingLoans, IEnumerable<BookItem>newLoanItems);
+        void ValidateMaxItemsInPeriod(Reader reader, DateTime loanDate, IEnumerable<Loan> existingLoans, IEnumerable<BookItem> newLoanItems);
     }
 }

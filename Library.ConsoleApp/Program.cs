@@ -9,19 +9,15 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false)
     .Build();
 
-var rules=configuration.GetSection("LibraryRules").Get<LibraryRulesSettings>()?? throw new InvalidOperationException("LibraryRules section is missing or invalid.");
+var rules = configuration.GetSection("LibraryRules").Get<LibraryRulesSettings>() ?? throw new InvalidOperationException("LibraryRules section is missing or invalid.");
 
 var loggerProvider = new ConsoleLoggerFactoryProvider(configuration);
 
-Console.WriteLine("=== LoanService tests ===");
+var loanService = new LoanService(loggerProvider, rules);
 
-var loanService = new LoanService(loggerProvider,rules);
-
-// test OK
 loanService.ValidateLoanItemLimit(
     []);
 
-// test cu eroare (log + exception)
 try
 {
     loanService.ValidateLoanItemLimit(
@@ -55,19 +51,14 @@ catch (Exception ex)
     Console.WriteLine($"Exception caught: {ex.Message}");
 }
 
-Console.WriteLine();
-Console.WriteLine("=== BookDomainService tests ===");
+var domainService = new BookDomainService(loggerProvider, rules);
 
-var domainService = new BookDomainService(loggerProvider,rules);
-
-// test OK
 domainService.ValidateMaxDomainsPerBook(
     [
         new BookDomain { Id = 1, Name = "IT" },
         new BookDomain { Id = 2, Name = "Math" }
     ]);
 
-// test cu eroare (log + exception)
 try
 {
     domainService.ValidateMaxDomainsPerBook(
@@ -81,4 +72,3 @@ catch (LibraryRuleExceptions ex)
 {
     Console.WriteLine($"Business rule violated: {ex.Message}");
 }
-

@@ -3,7 +3,7 @@
 namespace Library.Domain
 {
     /// <summary>
-    /// Represents a specific edition of a book
+    /// Represents a specific edition of a book.
     /// </summary>
     public class Edition
     {
@@ -15,7 +15,7 @@ namespace Library.Domain
         /// <summary>
         /// Gets or sets the book this edition belongs to.
         /// one-to-mane relationship
-        /// One book can have multiple editions;
+        /// One book can have multiple editions.
         /// </summary>
         required public Book Book { get; set; }
 
@@ -48,6 +48,5 @@ namespace Library.Domain
         /// Gets or sets bookitems.
         /// </summary>
         public List<BookItem> BookItems { get; set; } = new ();
-
     }
 }

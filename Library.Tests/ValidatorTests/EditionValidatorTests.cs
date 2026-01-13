@@ -1,7 +1,6 @@
 using FluentValidation.TestHelper;
 using Library.Domain;
 using Library.Domain.Validators;
-using Xunit;
 
 namespace Library.Tests.ValidatorTests
 {

@@ -1,12 +1,8 @@
-
-
 namespace Library.Tests
 {
-    using System;
     using System.Collections.Generic;
     using Library.Domain;
     using Library.Domain.Exceptions;
-    using Library.Service;
     using Library.Tests.TestHelpers;
     using Xunit;
     public class LoanServiceAvailabilityTests

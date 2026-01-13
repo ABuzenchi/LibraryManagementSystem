@@ -1,11 +1,8 @@
-
-
 namespace Library.Tests
 {
     using System;
     using System.Collections.Generic;
     using Library.Domain;
-    using Library.Service;
     using Library.Tests.TestHelpers;
     using Xunit;
     public class LoanServiceDomainRuleTests
@@ -103,11 +100,11 @@ namespace Library.Tests
         public void ValidateDistinctDomainsForLoan_Throws_When_No_Domains_Assigned()
         {
             var items = new List<BookItem>
-    {
-        CreateBookItemWithDomains(),
-        CreateBookItemWithDomains(),
-        CreateBookItemWithDomains()
-    };
+        {
+            CreateBookItemWithDomains(),
+            CreateBookItemWithDomains(),
+            CreateBookItemWithDomains()
+        };
 
             var service = LoanServiceTestFactory.Create();
 
@@ -122,11 +119,11 @@ namespace Library.Tests
             var d2 = new BookDomain { Id = 1, Name = "IT copy" };
 
             var items = new List<BookItem>
-    {
-        CreateBookItemWithDomains(d1),
-        CreateBookItemWithDomains(d2),
-        CreateBookItemWithDomains(d1)
-    };
+         {
+           CreateBookItemWithDomains(d1),
+           CreateBookItemWithDomains(d2),
+           CreateBookItemWithDomains(d1)
+         };
 
             var service = LoanServiceTestFactory.Create();
 
@@ -140,12 +137,12 @@ namespace Library.Tests
             var domain = CreateDomain(1, "IT");
 
             var items = new List<BookItem>
-    {
-        CreateBookItemWithDomains(domain),
-        CreateBookItemWithDomains(domain),
-        CreateBookItemWithDomains(domain),
-        CreateBookItemWithDomains(domain)
-    };
+        {
+             CreateBookItemWithDomains(domain),
+             CreateBookItemWithDomains(domain),
+             CreateBookItemWithDomains(domain),
+             CreateBookItemWithDomains(domain)
+        };
 
             var service = LoanServiceTestFactory.Create();
 
@@ -160,12 +157,12 @@ namespace Library.Tests
             var d2 = CreateDomain(2, "Math");
 
             var items = new List<BookItem>
-    {
-        CreateBookItemWithDomains(d1),
-        CreateBookItemWithDomains(d1),
-        CreateBookItemWithDomains(d2),
-        CreateBookItemWithDomains(d2)
-    };
+        {
+           CreateBookItemWithDomains(d1),
+           CreateBookItemWithDomains(d1),
+           CreateBookItemWithDomains(d2),
+           CreateBookItemWithDomains(d2)
+        };
 
             var service = LoanServiceTestFactory.Create();
 
@@ -182,13 +179,13 @@ namespace Library.Tests
             var d3 = CreateDomain(3, "Physics");
 
             var items = new List<BookItem>
-    {
-        CreateBookItemWithDomains(d1),
-        CreateBookItemWithDomains(d2),
-        CreateBookItemWithDomains(d3),
-        CreateBookItemWithDomains(d1),
-        CreateBookItemWithDomains(d2)
-    };
+          {
+             CreateBookItemWithDomains(d1),
+             CreateBookItemWithDomains(d2),
+             CreateBookItemWithDomains(d3),
+             CreateBookItemWithDomains(d1),
+             CreateBookItemWithDomains(d2)
+          };
 
             var service = LoanServiceTestFactory.Create();
 
@@ -204,11 +201,11 @@ namespace Library.Tests
             var d2 = CreateDomain(2, "Math");
 
             var items = new List<BookItem>
-    {
-        CreateBookItemWithDomains(d1),
-        CreateBookItemWithDomains(d1),
-        CreateBookItemWithDomains(d2)
-    };
+        {
+           CreateBookItemWithDomains(d1),
+           CreateBookItemWithDomains(d1),
+           CreateBookItemWithDomains(d2)
+        };
 
             var service = LoanServiceTestFactory.Create();
 

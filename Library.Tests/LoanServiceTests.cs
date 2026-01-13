@@ -1,11 +1,9 @@
-
 namespace Library.Tests
 {
     using System;
     using System.Collections.Generic;
     using Library.Domain;
     using Library.Domain.Exceptions;
-    using Library.Service;
     using Library.Tests.TestHelpers;
     using Xunit;
 
@@ -95,16 +93,15 @@ namespace Library.Tests
             var today = DateTime.Today;
 
             var existingLoans = new List<Loan>
-    {
-        CreateLoan(reader, today, 2)
-    };
+         {
+            CreateLoan(reader, today, 2)
+         };
 
             var newItems = new List<BookItem>
-    {
-        CreateValidBookItem()
-    };
+         {
+           CreateValidBookItem()
+         };
 
-            // 🔴 CORECT: setăm MaxItemsPerDay
             var service = LoanServiceTestFactory.Create(maxItemsPerDay: 2);
 
             Assert.Throws<DailyLoanLimitExceededException>(() =>

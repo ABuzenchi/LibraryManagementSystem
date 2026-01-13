@@ -15,7 +15,7 @@ namespace Library.Data.Mappers
     {
         private readonly NpgsqlConnection connection;
 
-         /// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="BookDataMapper"/> class.
         /// </summary>
         /// <param name="connection">

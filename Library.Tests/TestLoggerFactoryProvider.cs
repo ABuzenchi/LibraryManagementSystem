@@ -1,5 +1,3 @@
-
-
 namespace Library.Tests
 {
     using Library.Service.Logging;
@@ -9,7 +7,6 @@ namespace Library.Tests
     {
         public ILogger<T> CreateLogger<T>()
         {
-            // Nu scrie nimic pe consolă, dar îți permite să construiești serviciul
             return NullLogger<T>.Instance;
         }
     }

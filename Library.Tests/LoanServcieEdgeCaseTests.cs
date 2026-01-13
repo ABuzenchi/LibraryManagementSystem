@@ -1,18 +1,14 @@
-
 namespace Library.Tests
 {
     using System;
     using System.Collections.Generic;
     using Library.Domain;
-    using Library.Service;
-    using Library.Service.Configuration;
     using Xunit;
     using Library.Tests.TestHelpers;
 
 
     public class LoanServiceEdgeCaseTests
     {
-
         private static BookItem CreateItem()
         {
             return new BookItem
@@ -49,7 +45,6 @@ namespace Library.Tests
             return loan;
         }
 
-        // 1
         [Fact]
         public void DailyLoanLimit_Allows_DateTime_MinValue()
         {
@@ -66,7 +61,6 @@ namespace Library.Tests
             Assert.Null(ex);
         }
 
-        // 2
         [Fact]
         public void DailyLoanLimit_Allows_DateTime_MaxValue()
         {
@@ -83,7 +77,6 @@ namespace Library.Tests
             Assert.Null(ex);
         }
 
-        // 3
         [Fact]
         public void MaxItemsInPeriod_Allows_Period_One_Day()
         {
@@ -105,7 +98,6 @@ namespace Library.Tests
             Assert.Null(ex);
         }
 
-        // 4
         [Fact]
         public void MaxItemsInPeriod_Allows_Large_Period()
         {
@@ -122,7 +114,6 @@ namespace Library.Tests
             Assert.Null(ex);
         }
 
-        // 5
         [Fact]
         public void LoanItemLimit_Allows_IntMaxValue_Limit()
         {
@@ -135,7 +126,6 @@ namespace Library.Tests
             Assert.Null(ex);
         }
 
-        // 6
         [Fact]
         public void DailyLoanLimit_Allows_Zero_New_Items()
         {
@@ -152,7 +142,6 @@ namespace Library.Tests
             Assert.Null(ex);
         }
 
-        // 7
         [Fact]
         public void ReborrowDelta_Allows_DateTime_MinValue_LoanDate()
         {
@@ -170,7 +159,6 @@ namespace Library.Tests
             Assert.Null(ex);
         }
 
-        // 8
         [Fact]
         public void ReborrowDelta_Allows_DateTime_MaxValue_LoanDate()
         {
@@ -188,7 +176,6 @@ namespace Library.Tests
             Assert.Null(ex);
         }
 
-        // 9
         [Fact]
         public void ExtensionLimit_Allows_Large_Limit()
         {
@@ -209,7 +196,6 @@ namespace Library.Tests
             Assert.Null(ex);
         }
 
-        // 10
         [Fact]
         public void BookAvailability_Allows_Large_Number_Of_Copies()
         {
@@ -233,7 +219,6 @@ namespace Library.Tests
             Assert.Null(ex);
         }
 
-        // 11
         [Fact]
         public void MaxItemsInPeriod_Ignores_Loans_In_Future()
         {
@@ -255,7 +240,6 @@ namespace Library.Tests
             Assert.Null(ex);
         }
 
-        // 12
         [Fact]
         public void DailyLoanLimit_Allows_Many_Past_Loans()
         {

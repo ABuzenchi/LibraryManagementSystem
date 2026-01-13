@@ -3,12 +3,12 @@
 namespace Library.Domain
 {
     /// <summary>
-    /// Represents a book in the library
+    /// Represents a book in the library.
     /// </summary>
     public class Book
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the book
+        /// Gets or sets the unique identifier of the book.
         /// </summary>
         public int Id { get; set; }
 
