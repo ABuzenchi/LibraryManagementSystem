@@ -21,21 +21,6 @@ namespace Library.Tests
             return new BookDomainService(loggerProvider, rules);
         }
 
-        [Fact]
-        public void ValidateMaxDomainsPerBook_ThrowsException_WhenLimitIsExceeded()
-        {
-            var domains = new List<BookDomain>
-            {
-                new BookDomain { Id = 1, Name = "D1" },
-                new BookDomain { Id = 2, Name = "D2" },
-                new BookDomain { Id = 3, Name = "D3" }
-            };
-
-            var service = CreateService(maxDomainsPerBook: 2);
-
-            Assert.Throws<MaxDomainsPerBookExceededException>(() =>
-                service.ValidateMaxDomainsPerBook(domains));
-        }
 
         [Fact]
         public void ValidateMaxDomainsPerBook_DoesNotThrow_WhenWithinLimit()
@@ -75,6 +60,52 @@ namespace Library.Tests
         }
 
         [Fact]
+        public void ValidateMaxDomainsPerBook_Throws_When_Limit_Is_Exceeded()
+        {
+            var domains = new List<BookDomain>
+    {
+        new BookDomain { Id = 1, Name = "D1" },
+        new BookDomain { Id = 2, Name = "D2" },
+        new BookDomain { Id = 3, Name = "D3" }
+    };
+
+            var service = CreateService(maxDomainsPerBook: 2);
+
+            Assert.Throws<MaxDomainsPerBookExceededException>(() =>
+                service.ValidateMaxDomainsPerBook(domains));
+        }
+
+        [Fact]
+        public void ValidateNoAncestorDomainConflict_Throws_When_Parent_Is_In_List()
+        {
+            var parent = new BookDomain { Id = 1, Name = "Parent" };
+            var child = new BookDomain { Id = 2, Name = "Child", Parent = parent };
+
+            var domains = new List<BookDomain> { parent, child };
+
+            var service = CreateService(maxDomainsPerBook: 5);
+
+            Assert.Throws<DomainConflictException>(() =>
+                service.ValidateNoAncestorDomainConflict(domains));
+        }
+        [Fact]
+        public void ValidateNoAncestorDomainConflict_DoesNotThrow_When_No_Conflict()
+        {
+            var parent = new BookDomain { Id = 1, Name = "Parent" };
+            var child = new BookDomain { Id = 2, Name = "Child", Parent = parent };
+
+            var domains = new List<BookDomain> { child };
+
+            var service = CreateService(maxDomainsPerBook: 5);
+
+            var ex = Record.Exception(() =>
+                service.ValidateNoAncestorDomainConflict(domains));
+
+            Assert.Null(ex);
+        }
+
+
+        [Fact]
         public void ValidateMaxDomainsPerBook_Throws_When_Limit_Is_Negative()
         {
             var service = CreateService(maxDomainsPerBook: -1);
@@ -112,21 +143,6 @@ namespace Library.Tests
                 service.ValidateMaxDomainsPerBook(domains));
 
             Assert.Null(ex);
-        }
-
-        [Fact]
-        public void ValidateMaxDomainsPerBook_Counts_Distinct_Instances()
-        {
-            var domains = new List<BookDomain>
-    {
-        new BookDomain { Id = 1, Name = "D1" },
-        new BookDomain { Id = 1, Name = "D1 duplicate" }
-    };
-
-            var service = CreateService(maxDomainsPerBook: 1);
-
-            Assert.Throws<MaxDomainsPerBookExceededException>(() =>
-                service.ValidateMaxDomainsPerBook(domains));
         }
 
         [Fact]

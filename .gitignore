@@ -22,3 +22,9 @@ appsettings.Development.json
 # Nu urmări pachetele NuGet restore
 *.nupkg
 packages/
+
+# Test & coverage artifacts
+coverage-report/
+TestResults/
+**/TestResults/
+*.cobertura.xml

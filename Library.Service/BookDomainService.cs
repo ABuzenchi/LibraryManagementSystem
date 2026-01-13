@@ -100,6 +100,7 @@ namespace Library.Service
             if (count > this.rules.MaxDomainsPerBook)
             {
                 this.logger.LogWarning("Domain limit exceeded.Count={Count}, MaxAllowed={MaxAllowed}", domains.Count(), this.rules.MaxDomainsPerBook);
+                throw new MaxDomainsPerBookExceededException(this.rules.MaxDomainsPerBook);
             }
         }
     }
