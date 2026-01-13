@@ -6,7 +6,6 @@ using Library.Service.Logging;
 using Microsoft.Extensions.Configuration;
 
 var configuration = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json", optional: false)
     .Build();
 
 var rules = configuration.GetSection("LibraryRules").Get<LibraryRulesSettings>() ?? throw new InvalidOperationException("LibraryRules section is missing or invalid.");
