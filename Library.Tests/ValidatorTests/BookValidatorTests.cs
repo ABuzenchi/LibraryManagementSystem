@@ -10,20 +10,27 @@ namespace Library.Tests.ValidatorTests
 
         private static Book CreateValidBook()
         {
-            return new Book
+            var book = new Book
             {
                 Id = 1,
-                Title = "Test Book",
-                Domains =
-                {
-                    new BookDomain
-                    {
-                        Id = 1,
-                        Name = "IT"
-                    }
-                }
+                Title = "Test Book"
             };
+
+            book.SetDomains(
+                new[]
+                {
+            new BookDomain
+            {
+                Id = 1,
+                Name = "IT"
+            }
+                },
+                maxDomains: 5
+            );
+
+            return book;
         }
+
 
         [Fact]
         public void Should_Have_Error_When_Title_Is_Empty()
@@ -42,8 +49,7 @@ namespace Library.Tests.ValidatorTests
             var book = new Book
             {
                 Id = 1,
-                Title = "Test Book",
-                Domains = new()
+                Title = "Test Book"
             };
 
             var result = _validator.TestValidate(book);

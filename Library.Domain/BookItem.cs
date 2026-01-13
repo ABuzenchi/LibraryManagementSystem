@@ -23,6 +23,5 @@ namespace Library.Domain
         /// Gets or sets a value indicating whether indicates whether this book item is only for reading in the library.
         /// </summary>
         public bool IsReadingRoomOnly { get; set; }
-
     }
 }

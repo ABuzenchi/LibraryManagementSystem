@@ -22,7 +22,7 @@ namespace Library.Tests.TestHelpers
                 MaxLoanExtensions = maxLoanExtensions
             };
 
-            var loggerProvider = new TestLoggerFactoryProvider();
+            var loggerProvider = new MockLoggerFactoryProvider();
 
             return new LoanService(loggerProvider, rules);
         }

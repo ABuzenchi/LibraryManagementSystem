@@ -12,15 +12,21 @@ namespace Library.Tests
 
         private static BookItem CreateBookItemWithDomains(params BookDomain[] domains)
         {
+            var book = new Book
+            {
+                Title = "Test Book"
+            };
+
+            if (domains != null && domains.Any())
+            {
+                book.SetDomains(domains, maxDomains: 10);
+            }
+
             return new BookItem
             {
                 Edition = new Edition
                 {
-                    Book = new Book
-                    {
-                        Title = "Test Book",
-                        Domains = new List<BookDomain>(domains)
-                    },
+                    Book = book,
                     Publisher = "Test Publisher",
                     Year = 2024,
                     EditionNumber = 1,
@@ -28,6 +34,7 @@ namespace Library.Tests
                 }
             };
         }
+
 
         [Fact]
         public void ValidateDistinctDomainsForLoan_ThrowsException_WhenThreeItemsFromSameDomain()

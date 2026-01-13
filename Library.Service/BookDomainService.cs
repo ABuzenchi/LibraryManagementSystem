@@ -1,8 +1,5 @@
 // Copyright (c) Buzenchi Andreea
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Library.Domain;
 using Library.Domain.Exceptions;
 using Library.Service.Configuration;
@@ -68,6 +65,24 @@ namespace Library.Service
                     currentParent = currentParent.Parent;
                 }
             }
+        }
+
+        public void AssignDomainsToBook(Book book, IEnumerable<BookDomain> domains)
+        {
+            if (book == null)
+            {
+                throw new ArgumentNullException(nameof(book));
+            }
+
+            this.logger.LogInformation(
+                "Assigning domains to book {BookId}",
+                book.Id);
+
+            book.SetDomains(domains, this.rules.MaxDomainsPerBook);
+            this.logger.LogInformation(
+            "Successfully assigned {Count} domains to book {BookId}",
+            domains.Count(),
+            book.Id);
         }
 
         /// <summary>

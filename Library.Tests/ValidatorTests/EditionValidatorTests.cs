@@ -10,22 +10,28 @@ namespace Library.Tests.ValidatorTests
 
         private static Edition CreateValidEdition()
         {
+            var book = new Book
+            {
+                Id = 1,
+                Title = "Test Book"
+            };
+
+            book.SetDomains(
+                new[]
+                {
+            new BookDomain
+            {
+                Id = 1,
+                Name = "IT"
+            }
+                },
+                maxDomains: 5
+            );
+
             return new Edition
             {
                 Id = 1,
-                Book = new Book
-                {
-                    Id = 1,
-                    Title = "Test Book",
-                    Domains =
-                    {
-                        new BookDomain
-                        {
-                            Id = 1,
-                            Name = "IT"
-                        }
-                    }
-                },
+                Book = book,
                 Publisher = "Test Publisher",
                 Year = DateTime.Now.Year,
                 EditionNumber = 1,
@@ -33,6 +39,7 @@ namespace Library.Tests.ValidatorTests
                 Type = "Paperback"
             };
         }
+
 
         [Fact]
         public void Should_Have_Error_When_Book_Is_Null()

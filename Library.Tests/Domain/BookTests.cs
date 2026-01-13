@@ -1,6 +1,7 @@
 namespace Library.Tests.Domain
 {
     using Library.Domain;
+    using Library.Domain.Exceptions;
     using Xunit;
     public class BookTests
     {
@@ -19,21 +20,39 @@ namespace Library.Tests.Domain
         }
 
         [Fact]
-        public void Book_Domains_CanAddDomain()
+        public void Book_SetDomains_AssignsSingleDomain()
         {
             var book = new Book { Id = 1, Title = "Test" };
-            book.Domains.Add(new BookDomain { Id = 1, Name = "IT" });
+
+            book.SetDomains(
+                new[]
+                {
+            new BookDomain { Id = 1, Name = "IT" }
+                },
+                maxDomains: 5
+            );
+
             Assert.Single(book.Domains);
         }
 
+
         [Fact]
-        public void Book_CanHaveMultipleDomains()
+        public void Book_SetDomains_AssignsMultipleDomains()
         {
             var book = new Book { Id = 1, Title = "Test" };
-            book.Domains.Add(new BookDomain { Id = 1, Name = "IT" });
-            book.Domains.Add(new BookDomain { Id = 2, Name = "Math" });
+
+            book.SetDomains(
+                new[]
+                {
+            new BookDomain { Id = 1, Name = "IT" },
+            new BookDomain { Id = 2, Name = "Math" }
+                },
+                maxDomains: 5
+            );
+
             Assert.Equal(2, book.Domains.Count);
         }
+
 
         [Fact]
         public void Book_Id_Defaults_To_Zero()
@@ -51,24 +70,21 @@ namespace Library.Tests.Domain
         }
 
         [Fact]
-        public void Book_Domains_CanBeCleared()
+        public void Book_SetDomains_CanClearDomains()
         {
             var book = new Book { Id = 1, Title = "Test" };
-            book.Domains.Add(new BookDomain { Id = 1, Name = "IT" });
-            book.Domains.Clear();
+
+            book.SetDomains(
+                new[]
+                {
+            new BookDomain { Id = 1, Name = "IT" }
+                },
+                maxDomains: 5
+            );
+
+            book.SetDomains(Array.Empty<BookDomain>(), maxDomains: 5);
+
             Assert.Empty(book.Domains);
-        }
-
-        [Fact]
-        public void Book_Domains_Allows_DuplicateDomainReferences()
-        {
-            var book = new Book { Id = 1, Title = "Test" };
-            var domain = new BookDomain { Id = 1, Name = "IT" };
-
-            book.Domains.Add(domain);
-            book.Domains.Add(domain);
-
-            Assert.Equal(2, book.Domains.Count);
         }
 
     }
