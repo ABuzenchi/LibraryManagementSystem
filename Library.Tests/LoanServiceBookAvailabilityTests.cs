@@ -1,13 +1,14 @@
-using System;
-using System.Collections.Generic;
-using Library.Domain;
-using Library.Domain.Exceptions;
-using Library.Service;
-using Library.Tests.TestHelpers;
-using Xunit;
+
 
 namespace Library.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using Library.Domain;
+    using Library.Domain.Exceptions;
+    using Library.Service;
+    using Library.Tests.TestHelpers;
+    using Xunit;
     public class LoanServiceBookAvailabilityTests
     {
         private static Book CreateBook()
@@ -85,7 +86,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_All_Copies_Are_ReadingRoomOnly()
         {
-            var service =LoanServiceTestFactory.Create();
+            var service = LoanServiceTestFactory.Create();
             var book = CreateBook();
 
             var items = new List<BookItem>

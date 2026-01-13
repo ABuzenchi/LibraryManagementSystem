@@ -1,8 +1,7 @@
-using Library.Domain;
-using Xunit;
-
 namespace Library.Tests.Domain
 {
+    using Library.Domain;
+    using Xunit;
     public class BookTests
     {
         [Fact]

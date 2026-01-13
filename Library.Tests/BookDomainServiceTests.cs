@@ -1,10 +1,11 @@
-using Library.Domain;
-using Library.Domain.Exceptions;
-using Library.Service;
-using Library.Service.Configuration;
+
 
 namespace Library.Tests
 {
+    using Library.Domain;
+    using Library.Domain.Exceptions;
+    using Library.Service;
+    using Library.Service.Configuration;
 
     public class BookDomainServiceTests
     {

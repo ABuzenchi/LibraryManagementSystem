@@ -1,9 +1,9 @@
-using Library.Service;
-using Library.Service.Configuration;
-using Library.Service.Logging;
-
 namespace Library.Tests.TestHelpers
 {
+    using Library.Service;
+    using Library.Service.Configuration;
+    using Library.Service.Logging;
+
     public static class LoanServiceTestFactory
     {
         public static LoanService Create(

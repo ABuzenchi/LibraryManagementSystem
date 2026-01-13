@@ -1,14 +1,15 @@
-using System;
-using System.Collections.Generic;
-using Library.Domain;
-using Library.Service;
-using Library.Service.Configuration;
-using Xunit;
-using Library.Tests.TestHelpers;
-
 
 namespace Library.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using Library.Domain;
+    using Library.Service;
+    using Library.Service.Configuration;
+    using Xunit;
+    using Library.Tests.TestHelpers;
+
+
     public class LoanServiceEdgeCaseTests
     {
 
@@ -69,7 +70,7 @@ namespace Library.Tests
         [Fact]
         public void DailyLoanLimit_Allows_DateTime_MaxValue()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay: 1);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var ex = Record.Exception(() =>
@@ -86,7 +87,7 @@ namespace Library.Tests
         [Fact]
         public void MaxItemsInPeriod_Allows_Period_One_Day()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsInPeriod:int.MaxValue);
+            var service = LoanServiceTestFactory.Create(maxItemsInPeriod: int.MaxValue);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var loans = new List<Loan>
@@ -125,7 +126,7 @@ namespace Library.Tests
         [Fact]
         public void LoanItemLimit_Allows_IntMaxValue_Limit()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerLoan:int.MaxValue);
+            var service = LoanServiceTestFactory.Create(maxItemsPerLoan: int.MaxValue);
 
             var ex = Record.Exception(() =>
                 service.ValidateLoanItemLimit(
@@ -173,7 +174,7 @@ namespace Library.Tests
         [Fact]
         public void ReborrowDelta_Allows_DateTime_MaxValue_LoanDate()
         {
-            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays: 10);
             var reader = new Reader { Id = 1, Name = "Ana" };
             var book = new Book { Id = 1, Title = "Test" };
 
@@ -191,7 +192,7 @@ namespace Library.Tests
         [Fact]
         public void ExtensionLimit_Allows_Large_Limit()
         {
-            var service = LoanServiceTestFactory.Create(maxLoanExtensions:int.MaxValue);
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions: int.MaxValue);
             var loan = new Loan
             {
                 Id = 1,
@@ -236,7 +237,7 @@ namespace Library.Tests
         [Fact]
         public void MaxItemsInPeriod_Ignores_Loans_In_Future()
         {
-            var service = LoanServiceTestFactory.Create(periodDays:7,maxItemsInPeriod:1);
+            var service = LoanServiceTestFactory.Create(periodDays: 7, maxItemsInPeriod: 1);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var loans = new List<Loan>
@@ -258,7 +259,7 @@ namespace Library.Tests
         [Fact]
         public void DailyLoanLimit_Allows_Many_Past_Loans()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay: 1);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var loans = new List<Loan>();

@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using Library.Domain;
-using Library.Service;
-using Library.Tests.TestHelpers;
-using Xunit;
+
 
 namespace Library.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using Library.Domain;
+    using Library.Service;
+    using Library.Tests.TestHelpers;
+    using Xunit;
     public class LoanServiceStaffTests
     {
         private static BookItem CreateItem()
@@ -57,7 +58,7 @@ namespace Library.Tests
                 CreateItem()
             };
 
-            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay: 1);
 
             var exception = Record.Exception(() =>
                 service.ValidateDailyLoanLimit(
@@ -94,7 +95,7 @@ namespace Library.Tests
                 BookItem = CreateItem()
             });
 
-            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays: 10);
 
             var exception = Record.Exception(() =>
                 service.ValidateBookReborrowDelta(
@@ -145,7 +146,7 @@ namespace Library.Tests
                 CreateItem()
             };
 
-            var service = LoanServiceTestFactory.Create(periodDays:7,maxItemsInPeriod:2);
+            var service = LoanServiceTestFactory.Create(periodDays: 7, maxItemsInPeriod: 2);
 
             var exception = Record.Exception(() =>
                 service.ValidateMaxItemsInPeriod(
@@ -191,7 +192,7 @@ namespace Library.Tests
                 }
             };
 
-            var service =LoanServiceTestFactory.Create(maxLoanExtensions:2);
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions: 2);
 
             var exception = Record.Exception(() =>
                 service.ValidateLoanExtensionLimit(

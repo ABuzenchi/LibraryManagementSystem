@@ -1,3 +1,5 @@
+// Copyright (c) Buzenchi Andreea
+
 namespace Library.Domain
 {
     /// <summary>
@@ -6,15 +8,18 @@ namespace Library.Domain
     public class Book
     {
         /// <summary>
-        /// The unique identifier of the book
+        /// Gets or sets the unique identifier of the book
         /// </summary>
-        public int Id{get;set;}
-        
-        /// <summary>
-        /// The title of the book
-        /// </summary>
-        public required string Title{get;set;}
+        public int Id { get; set; }
 
-        public List<BookDomain>Domains{get;set;}=new();
+        /// <summary>
+        /// Gets or sets the title of the book.
+        /// </summary>
+        required public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets the domains of the book.
+        /// </summary>
+        public List<BookDomain> Domains { get; set; } = new ();
     }
 }

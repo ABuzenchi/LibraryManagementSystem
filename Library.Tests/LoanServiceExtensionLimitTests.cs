@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using Library.Domain;
-using Library.Service;
-using Library.Tests.TestHelpers;
-using Xunit;
 
 namespace Library.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using Library.Domain;
+    using Library.Service;
+    using Library.Tests.TestHelpers;
+    using Xunit;
+
     public class LoanServiceExtensionLimitTests
     {
         private static Loan CreateLoan(int id)
@@ -41,7 +42,7 @@ namespace Library.Tests
                 CreateExtension(loan)
             };
 
-            var service = LoanServiceTestFactory.Create(maxLoanExtensions:2);
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions: 2);
 
             Assert.Throws<Library.Domain.Exceptions.LoanExtensionLimitExceededException>(() =>
                 service.ValidateLoanExtensionLimit(
@@ -59,7 +60,7 @@ namespace Library.Tests
                 CreateExtension(loan)
             };
 
-            var service = LoanServiceTestFactory.Create(maxLoanExtensions:2);
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions: 2);
 
             var exception = Record.Exception(() =>
                 service.ValidateLoanExtensionLimit(
@@ -74,7 +75,7 @@ namespace Library.Tests
         {
             var loan = CreateLoan(1);
 
-            var service = LoanServiceTestFactory.Create(maxLoanExtensions:2);
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions: 2);
 
             var exception = Record.Exception(() =>
                 service.ValidateLoanExtensionLimit(
@@ -96,7 +97,7 @@ namespace Library.Tests
                 CreateExtension(loan2)
             };
 
-            var service = LoanServiceTestFactory.Create(maxLoanExtensions:2);
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions: 2);
             var exception = Record.Exception(() =>
                 service.ValidateLoanExtensionLimit(
                     loan1,
@@ -109,7 +110,7 @@ namespace Library.Tests
         public void Throws_WhenMaxExtensionsIsZero()
         {
             var loan = CreateLoan(1);
-            var service = LoanServiceTestFactory.Create(maxLoanExtensions:0);
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions: 0);
 
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 service.ValidateLoanExtensionLimit(

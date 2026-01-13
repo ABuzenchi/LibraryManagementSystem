@@ -1,9 +1,7 @@
-using System;
-using Library.Domain;
-using Xunit;
-
 namespace Library.Tests.Domain
 {
+    using Library.Domain;
+    using Xunit;
     public class LoanExtensionTests
     {
         [Fact]

@@ -1,3 +1,5 @@
+// Copyright (c) Buzenchi Andreea
+
 namespace Library.Domain
 {
     /// <summary>
@@ -6,22 +8,22 @@ namespace Library.Domain
     public class LoanExtension
     {
         /// <summary>
-        /// The unique identifier of the loan extension.
+        /// Gets or sets the unique identifier of the loan extension.
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// The loan to which this extension belongs.
+        /// Gets or sets the loan to which this extension belongs.
         /// </summary>
-        public required Loan Loan { get; set; }
+        required public Loan Loan { get; set; }
 
         /// <summary>
-        /// The number of days the loan was extended.
+        /// Gets or sets the number of days the loan was extended.
         /// </summary>
         public int DaysExtended { get; set; }
 
         /// <summary>
-        /// The date when the extension was applied.
+        /// Gets or sets the date when the extension was applied.
         /// </summary>
         public DateTime ExtensionDate { get; set; }
     }

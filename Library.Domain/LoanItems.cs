@@ -1,23 +1,25 @@
+// Copyright (c) Buzenchi Andreea
+
 namespace Library.Domain
 {
     /// <summary>
-    /// Represents a single item included in a loan
+    /// Represents a single item included in a loan.
     /// </summary>
     public class LoanItems
     {
         /// <summary>
-        /// The unique identifier of the loan item.
+        /// Gets or sets the unique identifier of the loan item.
         /// </summary>
-        public int Id{get;set;}
+        public int Id { get; set; }
 
         /// <summary>
-        /// The loan this item belongs to.
+        /// Gets or sets the loan this item belongs to.
         /// </summary>
-        public required Loan Loan{get;set;}
+        required public Loan Loan { get; set; }
 
         /// <summary>
-        /// The specific book item being borrowed.
+        /// Gets or sets the specific book item being borrowed.
         /// </summary>
-        public required BookItem BookItem{get;set;}
+        required public BookItem BookItem { get; set; }
     }
 }

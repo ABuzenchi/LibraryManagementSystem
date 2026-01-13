@@ -1,13 +1,14 @@
-using System;
-using System.Collections.Generic;
-using Library.Domain;
-using Library.Domain.Exceptions;
-using Library.Service;
-using Library.Tests.TestHelpers;
-using Xunit;
 
 namespace Library.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using Library.Domain;
+    using Library.Domain.Exceptions;
+    using Library.Service;
+    using Library.Tests.TestHelpers;
+    using Xunit;
+
     public class LoanServiceDeltaTests
     {
         private static Book CreateBook(int id) =>
@@ -60,7 +61,7 @@ namespace Library.Tests
                 CreateLoan(reader, DateTime.Today.AddDays(-5), book)
             };
 
-            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays: 10);
             Assert.Throws<ReborrowDeltaException>(() =>
                 service.ValidateBookReborrowDelta(
                     reader,
@@ -80,7 +81,7 @@ namespace Library.Tests
                 CreateLoan(reader, DateTime.Today.AddDays(-15), book)
             };
 
-            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays: 10);
 
             var exception = Record.Exception(() =>
                 service.ValidateBookReborrowDelta(
@@ -98,7 +99,7 @@ namespace Library.Tests
             var reader = new Reader { Id = 1, Name = "Ana" };
             var book = CreateBook(1);
 
-            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays: 10);
 
             var exception = Record.Exception(() =>
                 service.ValidateBookReborrowDelta(
@@ -122,7 +123,7 @@ namespace Library.Tests
                 CreateLoan(reader, DateTime.Today.AddDays(-2), book2)
             };
 
-            var service = LoanServiceTestFactory.Create(reborrowDeltaDays:10);
+            var service = LoanServiceTestFactory.Create(reborrowDeltaDays: 10);
 
             var exception = Record.Exception(() =>
                 service.ValidateBookReborrowDelta(

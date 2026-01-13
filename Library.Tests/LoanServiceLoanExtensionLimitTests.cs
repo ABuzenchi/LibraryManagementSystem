@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using Library.Domain;
-using Library.Service;
-using Library.Tests.TestHelpers;
-using Xunit;
+
 
 namespace Library.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using Library.Domain;
+    using Library.Service;
+    using Library.Tests.TestHelpers;
+    using Xunit;
     public class LoanServiceLoanExtensionLimitTests
     {
         private static Loan CreateLoan(Reader reader)
@@ -114,7 +115,7 @@ namespace Library.Tests
         [Fact]
         public void Counts_Only_Extensions_For_Same_Loan()
         {
-            var service = LoanServiceTestFactory.Create(maxLoanExtensions:1);
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions: 1);
 
             var loan1 = new Loan
             {
@@ -150,7 +151,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_Extensions_Exceed_Limit()
         {
-            var service = LoanServiceTestFactory.Create(maxLoanExtensions:2);
+            var service = LoanServiceTestFactory.Create(maxLoanExtensions: 2);
             var loan = CreateLoan(new Reader { Id = 1, Name = "Ana" });
 
             var extensions = new List<LoanExtension>

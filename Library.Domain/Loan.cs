@@ -1,3 +1,5 @@
+// Copyright (c) Buzenchi Andreea
+
 using System.Dynamic;
 
 namespace Library.Domain
@@ -8,28 +10,28 @@ namespace Library.Domain
     public class Loan
     {
         /// <summary>
-        /// The unique identifier of the loan.
+        /// Gets or sets the unique identifier of the loan.
         /// </summary>
-        public int Id{get;set;}
+        public int Id { get; set; }
 
         /// <summary>
-        /// The reader who made this loan
+        /// Gets or sets the reader who made this loan.
         /// </summary>
-        public required Reader Reader{get;set;}
+        required public Reader Reader { get; set; }
 
         /// <summary>
-        /// The date when loan was made.
+        /// Gets or sets the date when loan was made.
         /// </summary>
-        public DateTime LoanDate{get;set;}
+        public DateTime LoanDate { get; set; }
 
         /// <summary>
-        /// The due date for returning the loaned items
+        /// Gets or sets the due date for returning the loaned items.
         /// </summary>
-        public DateTime ReturnDueDate{get;set;}
+        public DateTime ReturnDueDate { get; set; }
 
         /// <summary>
-        /// Items included in this loan
+        /// Gets or sets items included in this loan.
         /// </summary>
-        public List<LoanItems>LoanItems{get;set;}=new();
+        public List<LoanItems> LoanItems { get; set; } = new ();
     }
 }

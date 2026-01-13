@@ -1,3 +1,5 @@
+// Copyright (c) Buzenchi Andreea
+
 namespace Library.Domain
 {
     /// <summary>
@@ -6,18 +8,19 @@ namespace Library.Domain
     public class Author
     {
         /// <summary>
-        /// The unique identifier of the author
+        /// Gets or sets the unique identifier of the author
         /// </summary>
-        public int Id{get;set;}
+        public int Id { get; set; }
 
         /// <summary>
-        /// Full name of the author
+        /// Gets or sets full name of the author.
         /// </summary>
-        public required string Name{get;set;}
+        required public string Name { get; set; }
+
         /// <summary>
-        /// List of books written by this author
+        /// Gets or sets list of books written by this author.
         /// Many-to-many relationship with Book.
         /// </summary>
-        public List<Book>Books{get;set;}=new();
+        public List<Book> Books { get; set; } = new ();
     }
 }

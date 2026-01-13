@@ -1,13 +1,14 @@
-using System;
-using System.Collections.Generic;
-using Library.Domain;
-using Library.Domain.Exceptions;
-using Library.Service;
-using Library.Tests.TestHelpers;
-using Xunit;
 
 namespace Library.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using Library.Domain;
+    using Library.Domain.Exceptions;
+    using Library.Service;
+    using Library.Tests.TestHelpers;
+    using Xunit;
+
     public class LoanServiceDailyLoanLimitTests
     {
         private static BookItem CreateItem()
@@ -90,7 +91,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_Limit_Is_Zero()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerDay:0);
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay: 0);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -104,7 +105,7 @@ namespace Library.Tests
         [Fact]
         public void DoesNotThrow_When_No_Loans_Today()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerDay:2);
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay: 2);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var ex = Record.Exception(() =>
@@ -120,7 +121,7 @@ namespace Library.Tests
         [Fact]
         public void DoesNotThrow_When_Exactly_At_Daily_Limit()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerDay:2);
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay: 2);
             var reader = new Reader { Id = 1, Name = "Ana" };
             var today = DateTime.Today;
 
@@ -142,7 +143,7 @@ namespace Library.Tests
         [Fact]
         public void Throws_When_Daily_Limit_Exceeded()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerDay:2);
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay: 2);
             var reader = new Reader { Id = 1, Name = "Ana" };
             var today = DateTime.Today;
 
@@ -162,7 +163,7 @@ namespace Library.Tests
         [Fact]
         public void Ignores_Loans_From_Other_Day()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay: 1);
             var reader = new Reader { Id = 1, Name = "Ana" };
             var yesterday = DateTime.Today.AddDays(-1);
 
@@ -184,7 +185,7 @@ namespace Library.Tests
         [Fact]
         public void Ignores_Loans_For_Other_Reader()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay: 1);
             var reader1 = new Reader { Id = 1, Name = "Ana" };
             var reader2 = new Reader { Id = 2, Name = "Ion" };
 
@@ -206,7 +207,7 @@ namespace Library.Tests
         [Fact]
         public void DoesNotThrow_When_NewItems_Empty()
         {
-            var service = LoanServiceTestFactory.Create(maxItemsPerDay:1);
+            var service = LoanServiceTestFactory.Create(maxItemsPerDay: 1);
             var reader = new Reader { Id = 1, Name = "Ana" };
 
             var ex = Record.Exception(() =>

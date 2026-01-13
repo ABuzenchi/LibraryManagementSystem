@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using Library.Domain;
-using Library.Service;
-using Library.Tests.TestHelpers;
-using Xunit;
+
 
 namespace Library.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using Library.Domain;
+    using Library.Service;
+    using Library.Tests.TestHelpers;
+    using Xunit;
     public class LoanServiceDomainRuleTests
     {
         private static BookDomain CreateDomain(int id, string name)

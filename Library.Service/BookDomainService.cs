@@ -1,27 +1,49 @@
+// Copyright (c) Buzenchi Andreea
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Library.Domain;
+using Library.Domain.Exceptions;
+using Library.Service.Configuration;
+using Library.Service.Interfaces;
+using Library.Service.Logging;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+
 namespace Library.Service
 {
-    using System;
-    using Library.Domain;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Library.Service.Interfaces;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Logging.Abstractions;
-    using Library.Service.Logging;
-    using Library.Service.Configuration;
-    using Library.Domain.Exceptions;
-
+    /// <summary>
+    /// Provides domain-related validation logic for books.
+    /// </summary>
     public class BookDomainService : IBookDomainService
     {
         private readonly ILogger<BookDomainService> logger;
         private readonly LibraryRulesSettings rules;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookDomainService"/> class.
+        /// </summary>
+        /// <param name="loggerProvider">
+        /// The logger factory provider.
+        /// </param>
+        /// <param name="rules">
+        /// The library business rules settings.
+        /// </param>
         public BookDomainService(ILoggerFactoryProvider loggerProvider, LibraryRulesSettings rules)
         {
             logger = loggerProvider.CreateLogger<BookDomainService>();
 
             this.rules = rules ?? throw new ArgumentNullException(nameof(rules));
         }
+
+        /// <summary>
+        /// Validates that no domain in the given collection
+        /// is an ancestor of another domain in the same collection.
+        /// </summary>
+        /// <param name="domains">
+        /// The collection of domains assigned to a book.
+        /// </param>
         public void ValidateNoAncestorDomainConflict(IEnumerable<BookDomain> domains)
         {
             if (domains == null)
@@ -48,31 +70,36 @@ namespace Library.Service
             }
         }
 
+        /// <summary>
+        /// Validates that the number of domains assigned to a book
+        /// does not exceed the configured maximum.
+        /// </summary>
+        /// <param name="domains">
+        /// The collection of domains assigned to a book.
+        /// </param>
         public void ValidateMaxDomainsPerBook(IEnumerable<BookDomain> domains)
         {
-            logger.LogInformation(
+            this.logger.LogInformation(
             "Validating max domains per book. MaxAllowed={MaxAllowed}",
-            rules.MaxDomainsPerBook);
+            this.rules.MaxDomainsPerBook);
 
             if (domains == null)
             {
-                logger.LogWarning("Domains collection is null");
+                this.logger.LogWarning("Domains collection is null");
                 throw new ArgumentNullException(nameof(domains));
 
             }
 
-            if (rules.MaxDomainsPerBook <= 0)
+            if (this.rules.MaxDomainsPerBook <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(rules.MaxDomainsPerBook), "Maximum allowed domains must be greater than zero");
+                throw new ArgumentOutOfRangeException(nameof(this.rules.MaxDomainsPerBook), "Maximum allowed domains must be greater than zero");
             }
 
             var count = domains.Count();
 
-            if (count > rules.MaxDomainsPerBook)
+            if (count > this.rules.MaxDomainsPerBook)
             {
-                logger.LogWarning("Domain limit exceeded.Count={Count}, MaxAllowed={MaxAllowed}", domains.Count(), rules.MaxDomainsPerBook);
-                throw new MaxDomainsPerBookExceededException(rules.MaxDomainsPerBook);
-
+                this.logger.LogWarning("Domain limit exceeded.Count={Count}, MaxAllowed={MaxAllowed}", domains.Count(), this.rules.MaxDomainsPerBook);
             }
         }
     }

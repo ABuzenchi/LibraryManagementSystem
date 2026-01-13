@@ -1,35 +1,35 @@
+// Copyright (c) Buzenchi Andreea
+
 namespace Library.Domain
 {
     /// <summary>
-    /// Represents a library reader or a staff member
+    /// Represents a library reader or a staff member.
     /// </summary>
     public class Reader
     {
         /// <summary>
-        /// The unique identifier of the reader
+        /// Gets or sets the unique identifier of the reader.
         /// </summary>
-        public int Id{get;set;}
+        public int Id { get; set; }
 
         /// <summary>
-        /// The name of the reader
+        /// Gets or sets the name of the reader.
         /// </summary>
-        public required string Name{get;set;}
+        required public string Name { get; set; }
 
         /// <summary>
-        /// Phone number
+        /// Gets or sets phone number.
         /// </summary>
-        public string? Phone{get;set;}
+        public string? Phone { get; set; }
 
         /// <summary>
-        /// Email address
+        /// Gets or sets email address.
         /// </summary>
-        public string? Email{get;set;}
+        public string? Email {get; set; }
 
         /// <summary>
-        /// True if the reader is library staff
+        /// Gets or sets a value indicating whether true if the reader is library staff.
         /// </summary>
-        public bool IsStaff{get;set;}
-
-        
+        public bool IsStaff { get; set; }
     }
 }

@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using Library.Domain;
-using Library.Domain.Exceptions;
-using Library.Service;
-using Library.Tests.TestHelpers;
-using Xunit;
-
 namespace Library.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using Library.Domain;
+    using Library.Domain.Exceptions;
+    using Library.Service;
+    using Library.Tests.TestHelpers;
+    using Xunit;
+
     public class LoanServicePeriodLimitTests
     {
         private static BookItem CreateItem(Book book)
@@ -62,7 +62,7 @@ namespace Library.Tests
                 CreateItem(new Book { Id = 3, Title = "B3" })
             };
 
-            var service = LoanServiceTestFactory.Create(periodDays:7, maxItemsInPeriod:2);
+            var service = LoanServiceTestFactory.Create(periodDays: 7, maxItemsInPeriod: 2);
 
             Assert.Throws<MaxItemsInPeriodExceededException>(() =>
                 service.ValidateMaxItemsInPeriod(
@@ -85,7 +85,7 @@ namespace Library.Tests
                 CreateItem(new Book { Id = 2, Title = "B2" })
             };
 
-            var service = LoanServiceTestFactory.Create(periodDays:7, maxItemsInPeriod:2);
+            var service = LoanServiceTestFactory.Create(periodDays: 7, maxItemsInPeriod: 2);
 
             var ex = Record.Exception(() =>
                 service.ValidateMaxItemsInPeriod(
@@ -110,7 +110,7 @@ namespace Library.Tests
                 CreateItem(new Book { Id = 1, Title = "B1" })
             };
 
-            var service = LoanServiceTestFactory.Create(periodDays:7, maxItemsInPeriod:2);
+            var service = LoanServiceTestFactory.Create(periodDays: 7, maxItemsInPeriod: 2);
 
             var ex = Record.Exception(() =>
                 service.ValidateMaxItemsInPeriod(
@@ -136,7 +136,7 @@ namespace Library.Tests
                 CreateItem(new Book { Id = 3, Title = "B3" })
             };
 
-            var service = LoanServiceTestFactory.Create(periodDays:7, maxItemsInPeriod:2);
+            var service = LoanServiceTestFactory.Create(periodDays: 7, maxItemsInPeriod: 2);
 
             Assert.Throws<MaxItemsInPeriodExceededException>(() =>
                 service.ValidateMaxItemsInPeriod(

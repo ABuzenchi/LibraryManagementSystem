@@ -9,7 +9,7 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false)
     .Build();
 
-var rules=configuration.GetSection("LibraryRules").Get<LibraryRulesSettings>();
+var rules=configuration.GetSection("LibraryRules").Get<LibraryRulesSettings>()?? throw new InvalidOperationException("LibraryRules section is missing or invalid.");
 
 var loggerProvider = new ConsoleLoggerFactoryProvider(configuration);
 
@@ -19,14 +19,13 @@ var loanService = new LoanService(loggerProvider,rules);
 
 // test OK
 loanService.ValidateLoanItemLimit(
-    new List<BookItem>());
+    []);
 
 // test cu eroare (log + exception)
 try
 {
     loanService.ValidateLoanItemLimit(
-        new List<BookItem>
-        {
+        [
             new BookItem
             {
                 Edition = new Edition
@@ -49,7 +48,7 @@ try
                     Pages = 100
                 }
             }
-        });
+        ]);
 }
 catch (Exception ex)
 {
@@ -63,22 +62,20 @@ var domainService = new BookDomainService(loggerProvider,rules);
 
 // test OK
 domainService.ValidateMaxDomainsPerBook(
-    new List<BookDomain>
-    {
+    [
         new BookDomain { Id = 1, Name = "IT" },
         new BookDomain { Id = 2, Name = "Math" }
-    });
+    ]);
 
 // test cu eroare (log + exception)
 try
 {
     domainService.ValidateMaxDomainsPerBook(
-        new List<BookDomain>
-        {
+        [
             new BookDomain { Id = 1, Name = "IT" },
             new BookDomain { Id = 2, Name = "Math" },
             new BookDomain { Id = 3, Name = "Physics" }
-        });
+        ]);
 }
 catch (LibraryRuleExceptions ex)
 {
